@@ -122,7 +122,15 @@ function FormMidiaUnica({ midia, selecionar }){
                 <Form.Label>URL pública da mídia</Form.Label>
                 <div className="d-flex align-items-start gap-2">
                     <Form.Control type="text" placeholder="URL pública da mídia" value={url} onChange={(e) => setUrl(e.target.value)} className="flex-grow-1" />
-                    <img src={url ? url : ""} className="img-thumbnail img-fluid" style={{ width: "200px", height: "auto" }} />
+                    {tipo ?
+                        tipo === "image" ?
+                            <img src={url} className="img-thumbnail img-fluid" style={{ width: "200px", height: "auto" }} />
+                        : tipo === "video" ?
+                            <video src={url} width={200} controls />
+                        : tipo === "audio" ?
+                            <audio src={url} controls />
+                        : ""
+                    : ""}
                 </div>
             </Form.Group>
             <Form.Group className="mb-3">
