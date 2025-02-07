@@ -15,6 +15,8 @@ import NavbarReplyAI from "./NavbarReplyAI";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { EmpresaContext } from '../contexts/EmpresaContext';
+import FormColaboradores from "./FormColaboradores";
+import FormMidias from "./FormMidias";
 
 function ConfigEmpresa(){
     var { slug } = useParams();
@@ -41,6 +43,10 @@ function ConfigEmpresa(){
         switch(tabAtiva){
             case 'informacoesBasicas':
                 return <FormInformacoesEmpresa novaEmpresa={false} />;
+            case 'colaboradores':
+                return <FormColaboradores />;
+            case 'midias':
+                return <FormMidias />;
             case 'assistentes':
                 return <FormAssistentes />;
             case 'mensagens':
@@ -78,6 +84,12 @@ function ConfigEmpresa(){
                             <Nav variant="pills" activeKey={tabAtiva} onSelect={(tabSelecionada) => setTabAtiva(tabSelecionada)}>
                                 <Nav.Item>
                                     <Nav.Link eventKey="informacoesBasicas">Informações básicas</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="colaboradores">Colaboradores</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="midias">Mídias</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link eventKey="assistentes">Assistentes</Nav.Link>

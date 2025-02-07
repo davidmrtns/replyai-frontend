@@ -48,6 +48,7 @@ function FormAssistenteUnico({ assistente }){
 
     const enviar = async () => {
         setEnviado(true);
+        
         if(assistente === "+"){
             var resposta = await apiFetch.adicionarAssistente(empresa.slug, nome, assistantId, proposito, atalho, idVoz);
             if(resposta && resposta.status === 200){

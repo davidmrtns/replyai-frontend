@@ -23,7 +23,7 @@ function NavbarReplyAI(){
     return(
         <Navbar expand="lg" className="navbar-replyai fixed-top" variant="dark">
             <Container fluid>
-                <Navbar.Brand href="/">ReplyAI</Navbar.Brand>
+                <Navbar.Brand href="/" className="titulo">ReplyAI</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>

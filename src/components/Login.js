@@ -32,7 +32,7 @@ function Login(){
     return(
         <Container className="pt-4">
             <Form onSubmit={handleSubmit}>
-                <h1>ReplyAI - Login</h1>
+                <h1 className="titulo">ReplyAI</h1>
                 <FloatingLabel label="E-mail">
                     <Form.Control 
                         type="email"

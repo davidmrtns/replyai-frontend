@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import ApiFetch from "../utils/ApiFetch";
 import Spinner from 'react-bootstrap/Spinner';
 import { EmpresaContext } from "../contexts/EmpresaContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 function FormAsaas(){
     const apiFetch = new ApiFetch();
@@ -12,6 +14,8 @@ function FormAsaas(){
     const [rotulo, setRotulo] = useState("");
     const [clientNumber, setClientNumer] = useState("");
     const [enviado, setEnviado] = useState(false);
+    const [webhookAgradecer, setWebhookAgradecer] = useState("");
+    const [webhookNotaFiscal, setWebhookNotaFiscal] = useState("");
 
     useEffect(() => {
         if(empresa){
@@ -24,8 +28,19 @@ function FormAsaas(){
             setToken(asaasClient.token);
             setRotulo(asaasClient.rotulo);
             setClientNumer(asaasClient.client_number);
+            setWebhookAgradecer(`${apiFetch.urlBase}/trabalho/agradecer_pagamento/asaas/${empresa.slug}/${empresa.token}/${asaasClient.client_number}`);
+            setWebhookNotaFiscal(`${apiFetch.urlBase}/trabalho/enviar_nf/asaas/${empresa.slug}/${empresa.token}/${asaasClient.client_number}`);
         }
     }, [asaasClient])
+
+    const copiarTexto = async (texto) => {
+        try{
+            await navigator.clipboard.writeText(texto);
+            alert("Informação copiada com sucesso!");
+        }catch{
+            alert("Opa, não foi possível copiar essa informação...");
+        }
+    }
 
     const enviar = async () => {
         setEnviado(true);
@@ -66,6 +81,24 @@ function FormAsaas(){
             <Form.Group className="mb-3">
                 <Form.Label>Número do cliente</Form.Label>
                 <Form.Control type="number" placeholder="0" value={clientNumber} onChange={(e) => setClientNumer(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Webhook - Agradecer pagamentos</Form.Label>
+                <InputGroup>
+                    <Form.Control type="text" placeholder="**********" readOnly value={webhookAgradecer} />
+                    <Button variant="outline-primary" onClick={() => copiarTexto(webhookAgradecer)}>
+                        <FontAwesomeIcon icon={faCopy} />
+                    </Button>
+                </InputGroup>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Webhook - Enviar NF</Form.Label>
+                <InputGroup>
+                    <Form.Control type="text" placeholder="**********" readOnly value={webhookNotaFiscal} />
+                    <Button variant="outline-primary" onClick={() => copiarTexto(webhookNotaFiscal)}>
+                        <FontAwesomeIcon icon={faCopy} />
+                    </Button>
+                </InputGroup>
             </Form.Group>
             <Button onClick={() => enviar()} disabled={enviado}>
                 {enviado ?

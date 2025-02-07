@@ -25,7 +25,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
             setSlug(empresa.slug || "");
             setToken(empresa.token || "");
             setFusoHorario(empresa.fuso_horario || "");
-            setWebhook(`${apiFetch.urlBase}/${empresa.slug}/${empresa.token}`);
+            setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`);
         }
     }, [empresa])
 

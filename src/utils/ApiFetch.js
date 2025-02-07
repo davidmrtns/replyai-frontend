@@ -137,6 +137,142 @@ class ApiFetch{
         return resposta;
     }
 
+    async adicionarColaborador(slug, nome, apelido, departamento){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/colaborador`, {
+                method: "post",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nome: nome,
+                    apelido: apelido,
+                    departamento: departamento
+                })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async alterarColaborador(slug, id, nome, apelido, departamento){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/colaborador`, {
+                method: "put",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: id,
+                    nome: nome,
+                    apelido: apelido,
+                    departamento: departamento
+                })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async removerColaborador(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/colaborador/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async adicionarMidia(slug, url, tipo, mediatype, nome, atalho, ordem){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/midia`, {
+                method: "post",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    url: url,
+                    tipo: tipo,
+                    mediatype: mediatype,
+                    nome: nome,
+                    atalho: atalho,
+                    ordem: ordem
+                })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async alterarMidia(slug, id, url, tipo, mediatype, nome, atalho, ordem){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/midia`, {
+                method: "put",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: id,
+                    url: url,
+                    tipo: tipo,
+                    mediatype: mediatype,
+                    nome: nome,
+                    atalho: atalho,
+                    ordem: ordem
+                })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async removerMidia(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/midia/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
     async editarInformacoesAssistentes(slug, assistentePadrao){
         var resposta;
 

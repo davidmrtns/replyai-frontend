@@ -11,7 +11,7 @@ function FormDeptDigisac({ departamento }){
     const [comentario, setComentario] = useState("");
     const [departmentId, setDepartmentId] = useState("");
     const [userId, setUserId] = useState("");
-    const [dptConfirmacao, setDptConfirmacao] = useState("");
+    const [dptConfirmacao, setDptConfirmacao] = useState(false);
     const [enviado, setEnviado] = useState(false);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ function FormDeptDigisac({ departamento }){
             setComentario(departamento.comentario || "");
             setDepartmentId(departamento.departmentId || "");
             setUserId(departamento.userId || "");
-            setDptConfirmacao(departamento.departamento_confirmacao);
+            setDptConfirmacao(departamento.departamento_confirmacao || false);
         }
     }, [departamento])
 
