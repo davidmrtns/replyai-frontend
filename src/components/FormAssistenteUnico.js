@@ -3,8 +3,10 @@ import { Button, Form } from "react-bootstrap";
 import ApiFetch from "../utils/ApiFetch";
 import Spinner from 'react-bootstrap/Spinner';
 import { EmpresaContext } from "../contexts/EmpresaContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-function FormAssistenteUnico({ assistente }){
+function FormAssistenteUnico({ assistente, selecionar }){
     const apiFetch = new ApiFetch();
     const { empresa, setEmpresa } = useContext(EmpresaContext);
     const [assistantId, setAssistantId] = useState("");
@@ -13,6 +15,7 @@ function FormAssistenteUnico({ assistente }){
     const [atalho, setAtalho] = useState("");
     const [idVoz, setIdVoz] = useState("");
     const [enviado, setEnviado] = useState(false);
+    const [excluido, setExcluido] = useState(false);
 
     useEffect(() => {
         if(assistente){
@@ -31,6 +34,8 @@ function FormAssistenteUnico({ assistente }){
                 assistentes: [...(prevEmpresa?.assistentes || []), novoAssistente]
             }
         });
+
+        selecionar(novoAssistente);
     }
 
     const updAssistente = (id, assistenteAtualizado) => {
@@ -44,6 +49,19 @@ function FormAssistenteUnico({ assistente }){
                 )
             };
         });
+    }
+
+    const delAssistente = (id) => {
+        setEmpresa((prevEmpresa) => {
+            return {
+                ...prevEmpresa,
+                assistentes: prevEmpresa.assistentes.filter(
+                    (assistente) => assistente.id !== id
+                )
+            };
+        });
+
+       selecionar("+");
     }
 
     const enviar = async () => {
@@ -70,6 +88,28 @@ function FormAssistenteUnico({ assistente }){
         }
 
         setEnviado(false);
+    }
+
+    const excluir = async () => {
+        setExcluido(true);
+        
+        var resposta = await apiFetch.removerAssistente(empresa.slug, assistente.id);
+        if(resposta){
+            if(resposta.status === 200){
+                resposta = await resposta.json();
+                if(resposta === true){
+                    delAssistente(assistente.id);
+                    alert("Assistente excluído com sucesso");
+                }else{
+                    alert("Não foi possível excluir o assistente. Tente novamente");
+                }
+            }else if(resposta.status === 403){
+                resposta = await resposta.json();
+                alert(resposta.detail);
+            }
+        }
+
+        setExcluido(false);
     }
 
     return(
@@ -107,13 +147,26 @@ function FormAssistenteUnico({ assistente }){
                     )) : ""}
                 </Form.Select>
             </Form.Group>
-            <Button onClick={() => enviar()} disabled={enviado}>
-                {enviado ?
-                    <Spinner animation="border" role="status" size="sm">
-                        <span className="visually-hidden">Carregando...</span>
-                    </Spinner>
-                : "Salvar"}
-            </Button>
+            <div className="d-flex gap-2">
+                <Button onClick={() => enviar()} disabled={enviado}>
+                    {enviado ?
+                        <Spinner animation="border" role="status" size="sm">
+                            <span className="visually-hidden">Carregando...</span>
+                        </Spinner>
+                    : "Salvar"}
+                </Button>
+                {assistente !== "+" ? 
+                    <Button onClick={() => excluir()} className="btn-danger">
+                        {excluido ?
+                            <Spinner animation="border" role="status" size="sm">
+                                <span className="visually-hidden">Carregando...</span>
+                            </Spinner>
+                        :
+                            <FontAwesomeIcon icon={faTrash} />
+                        }
+                    </Button>
+                : ""}
+            </div>
         </Form>
     );
 }

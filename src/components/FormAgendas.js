@@ -98,7 +98,7 @@ function FormAgenda(){
                             : "Nova agenda"}
                         </Accordion.Header>
                         <Accordion.Body>
-                            <FormAgendaUnica agenda={agendaSelecionada} />
+                            <FormAgendaUnica agenda={agendaSelecionada} selecionar={(ag) => setAgendaSelecionada(ag)} />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>

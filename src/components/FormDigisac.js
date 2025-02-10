@@ -105,7 +105,7 @@ function FormDigisac(){
                                 Departamento {deptSelecionado.id}
                             </Accordion.Header>
                             <Accordion.Body>
-                                <FormDeptDigisac departamento={deptSelecionado} />
+                                <FormDeptDigisac departamento={deptSelecionado} selecionar={(dpt) => setDeptSelecionado(dpt)} />
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>

@@ -3,8 +3,10 @@ import { Button, Form } from "react-bootstrap";
 import ApiFetch from "../utils/ApiFetch";
 import Spinner from 'react-bootstrap/Spinner';
 import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-function FormDeptDigisac({ departamento }){
+function FormDeptDigisac({ departamento, selecionar }){
     const apiFetch = new ApiFetch();
     const { empresa, setEmpresa } = useContext(EmpresaContext);
     const [atalho, setAtalho] = useState("");
@@ -13,6 +15,7 @@ function FormDeptDigisac({ departamento }){
     const [userId, setUserId] = useState("");
     const [dptConfirmacao, setDptConfirmacao] = useState(false);
     const [enviado, setEnviado] = useState(false);
+    const [excluido, setExcluido] = useState(false);
 
     useEffect(() => {
         if(departamento){
@@ -42,6 +45,8 @@ function FormDeptDigisac({ departamento }){
                 digisac_client: clientAtualizado
             }
         });
+
+        selecionar(novoDepartamento);
     }
 
     const updDepartamento = (id, departamentoAtualizado) => {
@@ -63,6 +68,27 @@ function FormDeptDigisac({ departamento }){
                 digisac_client: clientAtualizado,
             };
         });
+    }
+
+    const delDepartamento = (id) => {
+        setEmpresa((prevEmpresa) => {
+            const clientAtualizado = [
+                {
+                    ...prevEmpresa.digisac_client[0],
+                    departamentos: prevEmpresa.digisac_client[0].departamentos.filter(
+                        (departamento) => departamento.id !== id
+                    ),
+                },
+                ...prevEmpresa.digisac_client.slice(1),
+            ];
+    
+            return {
+                ...prevEmpresa,
+                digisac_client: clientAtualizado,
+            };
+        });
+
+       selecionar("+");
     }
 
     const enviar = async () => {
@@ -89,6 +115,23 @@ function FormDeptDigisac({ departamento }){
         }
 
         setEnviado(false);
+    }
+
+    const excluir = async () => {
+        setExcluido(true);
+        
+        var resposta = await apiFetch.removerDepartamento(empresa.slug, departamento.id);
+        if(resposta && resposta.status === 200){
+            resposta = await resposta.json();
+            if(resposta === true){
+                delDepartamento(departamento.id);
+                alert("Departamento excluído com sucesso");
+            }else{
+                alert("Não foi possível excluir o departamento. Tente novamente");
+            }
+        }
+
+        setExcluido(false);
     }
 
     return(
@@ -118,13 +161,26 @@ function FormDeptDigisac({ departamento }){
                     onChange={() => setDptConfirmacao(!dptConfirmacao)}
                 />
             </Form.Group>
-            <Button onClick={() => enviar()} disabled={enviado}>
-                {enviado ?
-                    <Spinner animation="border" role="status" size="sm">
-                        <span className="visually-hidden">Carregando...</span>
-                    </Spinner>
-                : "Salvar"}
-            </Button>
+            <div className="d-flex gap-2">
+                <Button onClick={() => enviar()} disabled={enviado}>
+                    {enviado ?
+                        <Spinner animation="border" role="status" size="sm">
+                            <span className="visually-hidden">Carregando...</span>
+                        </Spinner>
+                    : "Salvar"}
+                </Button>
+                {departamento !== "+" ? 
+                    <Button onClick={() => excluir()} className="btn-danger">
+                        {excluido ?
+                            <Spinner animation="border" role="status" size="sm">
+                                <span className="visually-hidden">Carregando...</span>
+                            </Spinner>
+                        :
+                            <FontAwesomeIcon icon={faTrash} />
+                        }
+                    </Button>
+                : ""}
+            </div>
         </Form>
     );
 }

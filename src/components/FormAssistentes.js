@@ -93,7 +93,7 @@ function FormAssistentes(){
                             : "Novo assistente"}
                         </Accordion.Header>
                         <Accordion.Body>
-                            <FormAssistenteUnico assistente={assSelecionado} />
+                            <FormAssistenteUnico assistente={assSelecionado} selecionar={(ass) => setAssSelecionado(ass)} />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
@@ -117,7 +117,7 @@ function FormAssistentes(){
                             : "Nova voz"}
                         </Accordion.Header>
                         <Accordion.Body>
-                            <FormVoz voz={vozSelecionada} />
+                            <FormVoz voz={vozSelecionada} selecionar={(voz) => setVozSelecionada(voz)} />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>

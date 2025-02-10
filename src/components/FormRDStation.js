@@ -92,7 +92,7 @@ function FormRDStation(){
                             Estágio {estagioSelecionado.id}
                         </Accordion.Header>
                         <Accordion.Body>
-                            <FormEstagioRD estagio={estagioSelecionado} />
+                            <FormEstagioRD estagio={estagioSelecionado} selecionar={(est) => setEstagioSelecionado(est)} />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>

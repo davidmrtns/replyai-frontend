@@ -3,8 +3,10 @@ import { Button, Form } from "react-bootstrap";
 import ApiFetch from "../utils/ApiFetch";
 import Spinner from 'react-bootstrap/Spinner';
 import { EmpresaContext } from "../contexts/EmpresaContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-function FormEstagioRD({ estagio }){
+function FormEstagioRD({ estagio, selecionar }){
     const apiFetch = new ApiFetch();
     const { empresa, setEmpresa } = useContext(EmpresaContext);
     const [atalho, setAtalho] = useState("");
@@ -12,6 +14,7 @@ function FormEstagioRD({ estagio }){
     const [userId, setUserId] = useState("");
     const [dealStageInicial, setDealStageInicial] = useState(false);
     const [enviado, setEnviado] = useState("");
+    const [excluido, setExcluido] = useState(false);
 
     useEffect(() => {
         if(estagio){
@@ -40,6 +43,8 @@ function FormEstagioRD({ estagio }){
                 rdstationcrm_client: clientAtualizado
             }
         });
+
+        selecionar(novoEstagio);
     }
 
     const updEstagio = (id, estagioAtualizado) => {
@@ -61,6 +66,27 @@ function FormEstagioRD({ estagio }){
                 rdstationcrm_client: clientAtualizado,
             };
         });
+    }
+
+    const delEstagio = (id) => {
+        setEmpresa((prevEmpresa) => {
+            const clientAtualizado = [
+                {
+                    ...prevEmpresa.rdstationcrm_client[0],
+                    estagios: prevEmpresa.rdstationcrm_client[0].estagios.filter(
+                        (estagio) => estagio.id !== id
+                    ),
+                },
+                ...prevEmpresa.rdstationcrm_client.slice(1),
+            ];
+    
+            return {
+                ...prevEmpresa,
+                rdstationcrm_client: clientAtualizado,
+            };
+        });
+
+        selecionar("+");
     }
 
     const enviar = async () => {
@@ -89,6 +115,23 @@ function FormEstagioRD({ estagio }){
         setEnviado(false);
     }
 
+    const excluir = async () => {
+        setExcluido(true);
+        
+        var resposta = await apiFetch.removerEstagioRD(empresa.slug, estagio.id);
+        if(resposta && resposta.status === 200){
+            resposta = await resposta.json();
+            if(resposta === true){
+                delEstagio(estagio.id);
+                alert("Estágio excluído com sucesso");
+            }else{
+                alert("Não foi possível excluir o estágio. Tente novamente");
+            }
+        }
+
+        setExcluido(false);
+    }
+
     return(
         <Form>
             <Form.Group className="mb-3">
@@ -112,13 +155,26 @@ function FormEstagioRD({ estagio }){
                     onChange={() => setDealStageInicial(!dealStageInicial)}
                 />
             </Form.Group>
-            <Button onClick={() => enviar()} disabled={enviado}>
-                {enviado ?
-                    <Spinner animation="border" role="status" size="sm">
-                        <span className="visually-hidden">Carregando...</span>
-                    </Spinner>
-                : "Salvar"}
-            </Button>
+            <div className="d-flex gap-2">
+                <Button onClick={() => enviar()} disabled={enviado}>
+                    {enviado ?
+                        <Spinner animation="border" role="status" size="sm">
+                            <span className="visually-hidden">Carregando...</span>
+                        </Spinner>
+                    : "Salvar"}
+                </Button>
+                {estagio !== "+" ? 
+                   <Button onClick={() => excluir()} className="btn-danger">
+                        {excluido ?
+                            <Spinner animation="border" role="status" size="sm">
+                                <span className="visually-hidden">Carregando...</span>
+                            </Spinner>
+                        :
+                            <FontAwesomeIcon icon={faTrash} />
+                        }
+                    </Button>
+                : ""}
+            </div>
         </Form>
     );
 }

@@ -345,6 +345,24 @@ class ApiFetch{
         return resposta;
     }
 
+    async removerAssistente(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/assistente/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
     async adicionarVoz(slug, voiceId, stability, similarityBoost, style){
         var resposta;
 
@@ -386,6 +404,24 @@ class ApiFetch{
                     similarity_boost: similarityBoost,
                     style: style
                 })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async removerVoz(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/voz/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             });
         }catch{
             resposta = null;
@@ -519,6 +555,24 @@ class ApiFetch{
         return resposta;
     }
 
+    async removerDepartamento(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/digisac/departamento/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
     async adicionarClienteEvolutionAPI(slug, apiKey, instanceName){
         var resposta;
 
@@ -623,6 +677,24 @@ class ApiFetch{
                     endereco: endereco,
                     atalho: atalho
                 })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async removerAgenda(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/agenda/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             });
         }catch{
             resposta = null;
@@ -857,6 +929,24 @@ class ApiFetch{
                     user_id: userId,
                     estagio_inicial: estagioInicial
                 })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async removerEstagioRD(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_crm/rdstation/estagio/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             });
         }catch{
             resposta = null;
