@@ -61,7 +61,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarEmpresa(nome, slug, fusoHorario, openaiApiKey){
+    async adicionarEmpresa(nome, slug, fusoHorario, empresaAtiva, openaiApiKey){
         var resposta;
 
         try{
@@ -75,6 +75,7 @@ class ApiFetch{
                     nome: nome,
                     slug: slug,
                     fuso_horario: fusoHorario,
+                    empresa_ativa: empresaAtiva,
                     openai_api_key: openaiApiKey
                 })
             });
@@ -115,7 +116,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesBasicas(slug, nome, fusoHorario){
+    async editarInformacoesBasicas(slug, nome, fusoHorario, empresaAtiva){
         var resposta;
 
         try{
@@ -127,7 +128,8 @@ class ApiFetch{
                 },
                 body: JSON.stringify({
                     nome: nome,
-                    fuso_horario: fusoHorario
+                    fuso_horario: fusoHorario,
+                    empresa_ativa: empresaAtiva
                 })
             });
         }catch{

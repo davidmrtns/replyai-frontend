@@ -15,6 +15,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
     const [slug, setSlug] = useState("");
     const [token, setToken] = useState("");
     const [fusoHorario, setFusoHorario] = useState("");
+    const [empresaAtiva, setEmpresaAtiva] = useState(false);
     const [webhook, setWebhook] = useState("");
     const [openaiApiKey, setOpenaiApiKey] = useState("");
     const [enviado, setEnviado] = useState(false);
@@ -24,6 +25,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
             setNome(empresa.nome || "");
             setSlug(empresa.slug || "");
             setToken(empresa.token || "");
+            setEmpresaAtiva(empresa.empresa_ativa || false);
             setFusoHorario(empresa.fuso_horario || "");
             setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`);
         }
@@ -42,7 +44,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
         setEnviado(true);
 
         if(!novaEmpresa){
-            var resposta = await apiFetch.editarInformacoesBasicas(slug, nome, fusoHorario);
+            var resposta = await apiFetch.editarInformacoesBasicas(slug, nome, fusoHorario, empresaAtiva);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 setEmpresa(resposta);
@@ -51,7 +53,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
                 alert("Ocorreu um erro");
             }
         }else{
-            var resposta = await apiFetch.adicionarEmpresa(nome, slug, fusoHorario, openaiApiKey);
+            var resposta = await apiFetch.adicionarEmpresa(nome, slug, fusoHorario, empresaAtiva, openaiApiKey);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 alert("Empresa adicionada com sucesso");
@@ -89,6 +91,15 @@ function FormInformacoesEmpresa({ novaEmpresa }){
             <Form.Group className="mb-3">
                 <Form.Label>Fuso-horário</Form.Label>
                 <Form.Control type="text" placeholder="Fuso-horário" value={fusoHorario} onChange={(e) => setFusoHorario(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Check
+                    type="switch"
+                    id="custom-switch"
+                    label="Ativar empresa"
+                    checked={empresaAtiva}
+                    onChange={() => setEmpresaAtiva(!empresaAtiva)}
+                />
             </Form.Group>
             {!novaEmpresa ? 
                 <Form.Group className="mb-3">
