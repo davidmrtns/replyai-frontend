@@ -1001,7 +1001,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesAsaas(slug, token, rotulo, clientNumber){
+    async editarInformacoesClienteAsaas(slug, token, rotulo, clientNumber){
         var resposta;
 
         try{
@@ -1016,6 +1016,24 @@ class ApiFetch{
                     rotulo: rotulo,
                     numero_cliente: clientNumber
                 })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async removerClienteAsaas(slug, id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_financeiras/asaas/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             });
         }catch{
             resposta = null;
