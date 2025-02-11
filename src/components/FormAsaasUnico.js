@@ -138,7 +138,7 @@ function FormAsaasUnico({ asaasClient, selecionar }){
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Número do cliente</Form.Label>
-                <Form.Control type="number" placeholder="0" value={clientNumber} onChange={(e) => setClientNumer(e.target.value)} />
+                <Form.Control type="number" placeholder="0" value={clientNumber} disabled={asaasClient !== "+"} onChange={(e) => setClientNumer(e.target.value)} />
             </Form.Group>
             {asaasClient !== "+" ? 
                 <>

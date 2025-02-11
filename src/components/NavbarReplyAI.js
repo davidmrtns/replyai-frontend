@@ -29,9 +29,15 @@ function NavbarReplyAI(){
                     <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
                         <Nav.Link href="/empresas">Todas empresas</Nav.Link>
                         {!usuarioLogado?.id_empresa ? <Nav.Link href="/nova-empresa">Nova empresa</Nav.Link> : ""}
+                        {usuarioLogado?.admin ? 
+                            <>
+                                <Nav.Link href="/usuarios">Todos usuários</Nav.Link> 
+                                <Nav.Link href="/novo-usuario">Novo usuário</Nav.Link> 
+                            </>
+                        : ""}
                     </Nav>
                     <div className="d-flex gap-2">
-                        <Button variant="outline-light" disabled>
+                        <Button variant="outline-light" onClick={() => navigate("/usuario")}>
                             <FontAwesomeIcon icon={faUser} />
                         </Button>
                         <Button variant="outline-light" onClick={() => deslogar()}>

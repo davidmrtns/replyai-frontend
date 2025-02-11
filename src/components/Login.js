@@ -21,12 +21,16 @@ function Login(){
 
         var token = await apiFetch.login(username, password);
 
-        if(token.status === true){
-            navigate('/empresas');
-        }else{
-            alert("Erro ao fazer login");
-            setAguardando(false);
+        if(token !== null){
+            if(token.status === true){
+                navigate('/empresas');
+            }else{
+                alert("Erro ao fazer login");
+                setAguardando(false);
+            }
         }
+
+        setAguardando(false);
     }
 
     return(

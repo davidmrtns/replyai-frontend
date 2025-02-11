@@ -21,9 +21,12 @@ class ApiFetch{
             if(response.ok){
                 const data = await response.json();
                 return data;
+            }else if(response.status === 401){
+                alert("Não foi possível fazer login com essas credenciais. Verifique se os dados estão corretos e se você tem acesso a esse sistema");
+                return null;
             }
         }catch{
-            return "Erro";
+            return null;
         }
     }
 
@@ -54,6 +57,102 @@ class ApiFetch{
             if(response.ok){
                 resposta = await response.json();
             }
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async adicionarUsuario(nome, email, senha, confirmacao, usuarioAtivo, admin, idEmpresa){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/usuario/`, {
+                method: "post",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nome: nome,
+                    email: email,
+                    senha: senha,
+                    confirmacao_senha: confirmacao,
+                    usuario_ativo: usuarioAtivo,
+                    admin: admin,
+                    id_empresa: idEmpresa
+                })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async alterarUsuario(id, nome, email, senha, confirmacao, usuarioAtivo, admin, idEmpresa){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/usuario/`, {
+                method: "put",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: id,
+                    nome: nome,
+                    email: email,
+                    senha: senha,
+                    confirmacao_senha: confirmacao,
+                    usuario_ativo: usuarioAtivo,
+                    admin: admin,
+                    id_empresa: idEmpresa
+                })
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async removerUsuario(id){
+        var resposta;
+
+        try{
+            resposta = await fetch(`${this.urlBase}/usuario/${id}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async listarUsuarios(cursor, limite){
+        var resposta;
+        let url = `${this.urlBase}/usuario/todos?limit=${limite}`
+
+        if(cursor){
+            url += `&cursor=${cursor}`;
+        }
+
+        try{
+            resposta = await fetch(url, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
         }catch{
             resposta = null;
         }
