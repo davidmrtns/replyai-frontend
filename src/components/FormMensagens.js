@@ -15,6 +15,7 @@ function FormMensagens(){
     const [tempoUltimoRecall, setTempoUltimoRecall] = useState(0);
     const [quantRecalls, setQuantRecalls] = useState(0);
     const [ativarRecall, setAtivarRecall] = useState(false);
+    const [ativarRecallConfirmacao, setAtivarRecallConfirmacao] = useState(false);
     const [mensagemErroIa, setMensagemErroIa] = useState("");
     const [enviado, setEnviado] = useState(false);
 
@@ -25,6 +26,7 @@ function FormMensagens(){
             setTempoUltimoRecall(empresa.final_recall_timeout_minutes || 0);
             setQuantRecalls(empresa.recall_quant || 0);
             setAtivarRecall(empresa.recall_ativo || false);
+            setAtivarRecallConfirmacao(empresa.recall_confirmacao_ativo || false);
             setMensagemErroIa(empresa.mensagem_erro_ia || "");
         }
     }, [empresa])
@@ -32,7 +34,7 @@ function FormMensagens(){
     const enviar = async () => {
         setEnviado(true);
 
-        var resposta = await apiFetch.editarInformacoesMensagens(empresa.slug, tipoMessageClient, tempoRecall, tempoUltimoRecall, quantRecalls, ativarRecall, mensagemErroIa);
+        var resposta = await apiFetch.editarInformacoesMensagens(empresa.slug, tipoMessageClient, tempoRecall, tempoUltimoRecall, quantRecalls, ativarRecall, ativarRecallConfirmacao, mensagemErroIa);
         if(resposta && resposta.status === 200){
             resposta = await resposta.json();
             setEmpresa(resposta);
@@ -74,6 +76,15 @@ function FormMensagens(){
                     label="Ativar recall"
                     checked={ativarRecall}
                     onChange={() => setAtivarRecall(!ativarRecall)}
+                />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Check
+                    type="switch"
+                    id="custom-switch"
+                    label="Enviar recall para contatos que estão em confirmação de consulta"
+                    checked={ativarRecallConfirmacao}
+                    onChange={() => setAtivarRecallConfirmacao(!ativarRecallConfirmacao)}
                 />
             </Form.Group>
             <Form.Group className="mb-3">

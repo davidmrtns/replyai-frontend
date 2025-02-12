@@ -531,7 +531,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesMensagens(slug, tipoCliente, tempoRecall, tempoUltimoRecall, quantRecalls, ativarRecall, mensagemErroIa){
+    async editarInformacoesMensagens(slug, tipoCliente, tempoRecall, tempoUltimoRecall, quantRecalls, ativarRecall, ativarRecallConfirmacao, mensagemErroIa){
         var resposta;
 
         try{
@@ -547,6 +547,7 @@ class ApiFetch{
                     tempo_recall_final_min: tempoUltimoRecall,
                     quant_recalls: quantRecalls,
                     ativar_recall: ativarRecall,
+                    ativar_recall_confirmacao: ativarRecallConfirmacao,
                     mensagem_erro_ia: mensagemErroIa
                 })
             });
