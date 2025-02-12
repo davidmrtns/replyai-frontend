@@ -1057,7 +1057,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesFinanceiras(slug, tipoCliente, lembrarVencimentos, cobrarInadimplentes){
+    async editarInformacoesFinanceiras(slug, tipoCliente, lembrarVencimentos, enviarBoletoVencimentos, cobrarInadimplentes){
         var resposta;
 
         try{
@@ -1070,6 +1070,7 @@ class ApiFetch{
                 body: JSON.stringify({
                     tipo_cliente: tipoCliente,
                     lembrar_vencimentos: lembrarVencimentos,
+                    enviar_boletos_vencimentos: enviarBoletoVencimentos,
                     cobrar_inadimplentes: cobrarInadimplentes
                 })
             });
