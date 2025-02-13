@@ -4,6 +4,15 @@
   background-color: #6340e3;
 }
 
+.logo{
+  width: 27px;
+  height: 27px;
+}
+
+.logo path.cls-2{
+  fill: #ffffff;
+}
+
 .titulo{
   font-family: "Poppins", serif;
   font-weight: 500;
