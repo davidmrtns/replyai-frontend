@@ -29,14 +29,15 @@ function FormColaboradores(){
     return(
         <Form>
             <h1>Colaboradores</h1>
+            <p className="fst-italic opacity-75">Os colaboradores listados abaixo serão reconhecidos pelos seus assistentes de IA.</p>
             <Form.Group className="mb-3">
                 <Form.Label>Colaboradores (selecione um colaborador para modificá-lo)</Form.Label>
                 <Form.Select value={colabSelecionado?.id || colabSelecionado} onChange={(opcao) => alterarColabSelecionado(opcao.target.value)}>
                     <option>--</option>
+                    <option value="+">+ Adicionar colaborador</option>
                     {colaboradores ? colaboradores.map((colaborador) => (
                         <option value={colaborador.id}>{colaborador.nome}</option>
                     )) : ""}
-                    <option value="+">Adicionar colaborador</option>
                 </Form.Select>
             </Form.Group>
             {colabSelecionado ?

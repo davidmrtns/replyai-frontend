@@ -62,6 +62,7 @@ function FormAssistentes(){
             <h1>Assistentes</h1>
             <Form.Group className="mb-3">
                 <Form.Label>Assistente padrão</Form.Label>
+                <p className="fst-italic opacity-75">Apenas assistentes do tipo "responder" podem ser selecionados como assistente padrão.</p>
                 <Form.Select onChange={(e) => setAssPadraoSelecionado(e.target.value)}>
                     <option>--</option>
                     {assistentes ? assistentes.map((assistente) => (
@@ -78,10 +79,26 @@ function FormAssistentes(){
                 <Form.Label>Assistentes (selecione um assistente para modificá-lo)</Form.Label>
                 <Form.Select onChange={(opcao) => alterarAssSelecionado(opcao.target.value)}>
                     <option>--</option>
-                    {assistentes ? assistentes.map((assistente) => (
-                        <option value={assistente.id}>{assistente.nome} - {assistente.proposito}</option>
-                    )) : ""}
-                    <option value="+">Adicionar assistente</option>
+                    <option value="+">+ Adicionar assistente</option>
+                    {assistentes && (
+                        Object.entries(
+                            assistentes.reduce((acc, assistente) => {
+                                if (!acc[assistente.proposito]) {
+                                    acc[assistente.proposito] = [];
+                                }
+                                acc[assistente.proposito].push(assistente);
+                                return acc;
+                            }, {})
+                        ).map(([proposito, lista]) => (
+                            <optgroup key={proposito} label={proposito.toUpperCase()}>
+                                {lista.map((assistente) => (
+                                    <option key={assistente.id} value={assistente.id}>
+                                        {assistente.nome}
+                                    </option>
+                                ))}
+                            </optgroup>
+                        ))
+                    )}
                 </Form.Select>
             </Form.Group>
             {assSelecionado ?
@@ -102,10 +119,10 @@ function FormAssistentes(){
                 <Form.Label>Vozes (selecione uma voz para modificá-la)</Form.Label>
                 <Form.Select onChange={(opcao) => alterarVozSelecionada(opcao.target.value)}>
                     <option>--</option>
+                    <option value="+">+ Adicionar voz</option>
                     {vozes ? vozes.map((voz) => (
-                        <option value={voz.id}>{voz.voiceId}</option>
+                        <option value={voz.id}>{voz.nome}</option>
                     )) : ""}
-                    <option value="+">Adicionar voz</option>
                 </Form.Select>
             </Form.Group>
             {vozSelecionada ?
@@ -113,7 +130,7 @@ function FormAssistentes(){
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>
                             {vozSelecionada !== "+" ?
-                                (`Voz ${vozSelecionada.voiceId}`)
+                                (`Voz ${vozSelecionada.nome}`)
                             : "Nova voz"}
                         </Accordion.Header>
                         <Accordion.Body>

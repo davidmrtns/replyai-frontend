@@ -1,6 +1,6 @@
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useContext, useEffect, useState } from "react";
 import ApiFetch from "../utils/ApiFetch";
 import Spinner from 'react-bootstrap/Spinner';
@@ -18,13 +18,18 @@ function FormInformacoesEmpresa({ novaEmpresa }){
     const [empresaAtiva, setEmpresaAtiva] = useState(false);
     const [webhook, setWebhook] = useState("");
     const [openaiApiKey, setOpenaiApiKey] = useState("");
+    const [elevenLabsApiKey, setElevenLabsApiKey] = useState("");
     const [enviado, setEnviado] = useState(false);
+    const [exibirOpenAIKey, setExibirOpenAIKey] = useState(false);
+    const [exibirElevenLabsKey, setExibirElevenLabsKey] = useState(false);
 
     useEffect(() => {
         if(empresa){
             setNome(empresa.nome || "");
             setSlug(empresa.slug || "");
             setToken(empresa.token || "");
+            setOpenaiApiKey(empresa.openai_api_key || "");
+            setElevenLabsApiKey(empresa.elevenlabs_api_key || "");
             setEmpresaAtiva(empresa.empresa_ativa || false);
             setFusoHorario(empresa.fuso_horario || "");
             setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`);
@@ -44,7 +49,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
         setEnviado(true);
 
         if(!novaEmpresa){
-            var resposta = await apiFetch.editarInformacoesBasicas(slug, nome, fusoHorario, empresaAtiva);
+            var resposta = await apiFetch.editarInformacoesBasicas(slug, nome, fusoHorario, empresaAtiva, openaiApiKey, elevenLabsApiKey);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 setEmpresa(resposta);
@@ -53,7 +58,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
                 alert("Ocorreu um erro");
             }
         }else{
-            var resposta = await apiFetch.adicionarEmpresa(nome, slug, fusoHorario, empresaAtiva, openaiApiKey);
+            var resposta = await apiFetch.adicionarEmpresa(nome, slug, fusoHorario, empresaAtiva, openaiApiKey, elevenLabsApiKey);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 alert("Empresa adicionada com sucesso");
@@ -112,12 +117,25 @@ function FormInformacoesEmpresa({ novaEmpresa }){
                     </InputGroup>
                 </Form.Group>
             : ""}
-            {novaEmpresa ? 
-                <Form.Group className="mb-3">
-                    <Form.Label>Chave de API da OpenAI</Form.Label>
-                    <Form.Control type="text" placeholder="Chave de API da OpenAI" value={openaiApiKey} onChange={(e) => setOpenaiApiKey(e.target.value)} />
-                </Form.Group>
-            : ""}
+            <Form.Group className="mb-3">
+                <Form.Label>Chave de API da OpenAI</Form.Label>
+                <InputGroup>
+                    <Form.Control type={exibirOpenAIKey ? "text" : "password"} placeholder="Chave de API da OpenAI" value={openaiApiKey} onChange={(e) => setOpenaiApiKey(e.target.value)} />
+                    <Button variant="outline-primary" onClick={() => setExibirOpenAIKey(!exibirOpenAIKey)}>
+                        <FontAwesomeIcon icon={exibirOpenAIKey ? faEyeSlash : faEye} />
+                    </Button>
+                </InputGroup>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Chave de API da ElevenLabs (opcional)</Form.Label>
+                <p className="fst-italic opacity-75">Se uma chave da ElevenLabs não for fornecida, as IAs não poderão responder seus clientes em áudio.</p>
+                <InputGroup>
+                    <Form.Control type={exibirElevenLabsKey ? "text" : "password"} placeholder="Chave de API da ElevenLabs (opcional)" value={elevenLabsApiKey} onChange={(e) => setElevenLabsApiKey(e.target.value)} />
+                    <Button variant="outline-primary" onClick={() => setExibirElevenLabsKey(!exibirElevenLabsKey)}>
+                        <FontAwesomeIcon icon={exibirElevenLabsKey ? faEyeSlash : faEye} />
+                    </Button>
+                </InputGroup>
+            </Form.Group>
             <Button onClick={() => enviar()} disabled={enviado}>
                 {enviado ?
                     <Spinner animation="border" role="status" size="sm">

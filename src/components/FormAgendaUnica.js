@@ -102,12 +102,14 @@ function FormAgendaUnica({ agenda, selecionar }){
     return(
         <Form>
             <Form.Group className="mb-3">
-                <Form.Label>Endereço da agenda</Form.Label>
-                <Form.Control type="email" placeholder="Endereço da agenda" value={endereco} onChange={(e) => setEndereco(e.target.value)} />
+                <Form.Label>Endereço de e-mail agenda</Form.Label>
+                <p className="fst-italic opacity-75">Antes de cadastrar a agenda, verifique se ela foi compartilhada com você através do seu provedor de agenda (Google ou Outlook).</p>
+                <Form.Control type="email" placeholder="Endereço de e-mail da agenda" value={endereco} onChange={(e) => setEndereco(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Atalho da agenda</Form.Label>
-                <Form.Control type="text" placeholder="Atalho da agenda" value={atalho} onChange={(e) => setAtalho(e.target.value)} />
+                <p className="fst-italic opacity-75">As IAs utilizarão este atalho para escolher a agenda correta para inserir o agendamento.</p>
+                <Form.Control type="text" placeholder="Atalho da agenda" value={atalho} onChange={(e) => setAtalho(e.target.value.toUpperCase().trim())} />
             </Form.Group>
             <div className="d-flex gap-2">
                 <Button onClick={() => enviar()} disabled={enviado}>
