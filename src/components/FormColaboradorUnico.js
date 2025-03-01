@@ -114,11 +114,13 @@ function FormColaboradorUnico({ colaborador, selecionar }){
                 <Form.Control type="text" placeholder="Nome do colaborador" value={nome} onChange={(e) => setNome(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label>Apelido do colaborador</Form.Label>
-                <Form.Control type="text" placeholder="Apelido do colaborador" value={apelido} onChange={(e) => setApelido(e.target.value)} />
+                <Form.Label>Apelido do colaborador (opcional)</Form.Label>
+                <p className="fst-italic opacity-75">Preencha esse campo caso os seus clientes se refiram a esse colaborador por algum apelido.</p>
+                <Form.Control type="text" placeholder="Apelido do colaborador (opcional)" value={apelido} onChange={(e) => setApelido(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Departamento</Form.Label>
+                <p className="fst-italic opacity-75">Nome do departamento em texto plano.</p>
                 <Form.Control type="text" placeholder="Departamento" value={departamento} onChange={(e) => setDepartamento(e.target.value)} />
             </Form.Group>
             <div className="d-flex gap-2">

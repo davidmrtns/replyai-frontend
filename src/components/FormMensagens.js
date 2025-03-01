@@ -54,7 +54,7 @@ function FormMensagens(){
                 <Form.Select value={tipoMessageClient} onChange={(opcao) => setTipoMessageClient(opcao.target.value)}>
                     <option value="">--</option>
                     <option value="digisac">Digisac</option>
-                    <option value="evolution">Evolution API</option>
+                    <option value="evolution">WhatsApp QR Code</option>
                 </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
@@ -96,7 +96,7 @@ function FormMensagens(){
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>
                             {tipoMessageClient == "digisac" ? "Configurações do Digisac" : 
-                            "Configurações do EvolutionAPI"}
+                            "Conexão WhatsApp QR Code"}
                         </Accordion.Header>
                         <Accordion.Body>
                             {tipoMessageClient == "digisac" ? <FormDigisac /> 

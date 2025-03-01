@@ -5,6 +5,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { EmpresaContext } from "../contexts/EmpresaContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import MarkdownEditor from "./MarkdownEditor";
 
 function FormAssistenteUnico({ assistente, selecionar }){
     const apiFetch = new ApiFetch();
@@ -14,16 +15,35 @@ function FormAssistenteUnico({ assistente, selecionar }){
     const [proposito, setProposito] = useState("");
     const [atalho, setAtalho] = useState("");
     const [idVoz, setIdVoz] = useState("");
+    const [instrucoes, setInstrucoes] = useState("");
+    const [carregandoInstrucoes, setCarregandoInstrucoes] = useState(false);
     const [enviado, setEnviado] = useState(false);
     const [excluido, setExcluido] = useState(false);
 
     useEffect(() => {
+        const obterInstrucoes = async () => {
+            setCarregandoInstrucoes(true);
+
+            if(assistente?.id){
+                var dados = await apiFetch.obterInstrucoes(empresa.slug, assistente.id);
+                if(dados){
+                    setInstrucoes(dados);
+                }
+            }else{
+                setInstrucoes("");
+            }
+
+            setCarregandoInstrucoes(false);
+        }
+        
         if(assistente){
             setAssistantId(assistente.assistantId || "");
             setNome(assistente.nome || "");
             setProposito(assistente.proposito || "");
             setAtalho(assistente.atalho || "");
             setIdVoz(assistente.voz ? assistente.voz.id : "" || "");
+
+            obterInstrucoes();
         }
     }, [assistente])
 
@@ -68,7 +88,7 @@ function FormAssistenteUnico({ assistente, selecionar }){
         setEnviado(true);
         
         if(assistente === "+"){
-            var resposta = await apiFetch.adicionarAssistente(empresa.slug, nome, assistantId, proposito, atalho, idVoz);
+            var resposta = await apiFetch.adicionarAssistente(empresa.slug, nome, instrucoes, proposito, atalho, idVoz);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 addAssistente(resposta);
@@ -77,7 +97,7 @@ function FormAssistenteUnico({ assistente, selecionar }){
                 alert("Ocorreu um erro");
             }
         }else{
-            var resposta = await apiFetch.editarAssistente(empresa.slug, assistente.id, nome, assistantId, proposito, atalho, idVoz);
+            var resposta = await apiFetch.editarAssistente(empresa.slug, assistente.id, nome, instrucoes, proposito, atalho, idVoz);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 updAssistente(assistente.id, resposta);
@@ -118,10 +138,12 @@ function FormAssistenteUnico({ assistente, selecionar }){
                 <Form.Label>Nome do assistente</Form.Label>
                 <Form.Control type="text" placeholder="Nome do assistente" value={nome} onChange={(e) => setNome(e.target.value)} />
             </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label>ID do assistente</Form.Label>
-                <Form.Control type="text" placeholder="ID do assistente" value={assistantId} onChange={(e) => setAssistantId(e.target.value)} />
-            </Form.Group>
+            {assistente?.assistantId ?
+                <Form.Group className="mb-3">
+                    <Form.Label>ID do assistente</Form.Label>
+                    <Form.Control type="text" placeholder="ID do assistente" value={assistantId} disabled />
+                </Form.Group>
+            : ""}
             <Form.Group className="mb-3">
                 <Form.Label>Propósito do assistente</Form.Label>
                 <Form.Select value={proposito} onChange={(e) => setProposito(e.target.value)}>
@@ -136,14 +158,26 @@ function FormAssistenteUnico({ assistente, selecionar }){
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Atalho do assistente</Form.Label>
-                <Form.Control type="text" placeholder="Atalho do assistente" value={atalho} onChange={(e) => setAtalho(e.target.value)} />
+                <Form.Control type="text" placeholder="Atalho do assistente" value={atalho} onChange={(e) => setAtalho(e.target.value.toUpperCase().trim())} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+            {carregandoInstrucoes ? 
+                <div>
+                    <p className="mb-0">Carregando instruções</p>
+                    <Spinner animation="border" role="status" size="sm">
+                        <span className="visually-hidden">Carregando...</span>
+                    </Spinner>
+                </div>
+            : 
+                <MarkdownEditor instrucoes={instrucoes} setInstrucoes={setInstrucoes} />
+            }
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Voz do assistente</Form.Label>
                 <Form.Select value={idVoz} onChange={(opcao) => setIdVoz(opcao.target.value)}>
                     <option>--</option>
                     {empresa.vozes ? empresa.vozes.map((voz) => (
-                        <option value={voz.id}>{voz.voiceId}</option>
+                        <option value={voz.id}>{voz.nome}</option>
                     )) : ""}
                 </Form.Select>
             </Form.Group>

@@ -28,14 +28,15 @@ function FormMidias(){
     return(
         <Form>
             <h1>Mídias</h1>
+            <p className="fst-italic opacity-75">As mídias abaixo poderão ser enviadas pelos seus assistentes de IA durante o fluxo de atendimento deles.</p>
             <Form.Group className="mb-3">
                 <Form.Label>Mídias (selecione uma mídia para modificá-la)</Form.Label>
                 <Form.Select value={midiaSelecionada?.id || midiaSelecionada} onChange={(opcao) => alterarMidiaSelecionada(opcao.target.value)}>
                     <option>--</option>
+                    <option value="+">+ Adicionar mídia</option>
                     {midias ? midias.map((midia) => (
                         <option value={midia.id}>{midia.nome}</option>
                     )) : ""}
-                    <option value="+">Adicionar mídia</option>
                 </Form.Select>
             </Form.Group>
             {midiaSelecionada ?

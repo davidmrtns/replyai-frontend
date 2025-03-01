@@ -31,10 +31,10 @@ function FormAsaas(){
                 <Form.Label>Clientes (selecione um cliente para modificá-lo)</Form.Label>
                 <Form.Select onChange={(opcao) => alterarClienteSelecionado(opcao.target.value)}>
                     <option>--</option>
+                    <option value="+">+ Adicionar cliente</option>
                     {asaasClients ? asaasClients.map((cliente) => (
                         <option value={cliente.id}>{cliente.rotulo}</option>
                     )) : ""}
-                    <option value="+">Adicionar cliente</option>
                 </Form.Select>
             </Form.Group>
             {clienteSelecionado ?

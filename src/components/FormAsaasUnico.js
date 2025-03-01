@@ -134,11 +134,11 @@ function FormAsaasUnico({ asaasClient, selecionar }){
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Rótulo da conta</Form.Label>
-                <Form.Control type="text" placeholder="Rótulo da conta" value={rotulo} onChange={(e) => setRotulo(e.target.value)} />
+                <Form.Control type="text" placeholder="Rótulo da conta" value={rotulo} onChange={(e) => setRotulo(e.target.value.toUpperCase().trim())} />
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Número do cliente</Form.Label>
-                <Form.Control type="number" placeholder="0" value={clientNumber} disabled={asaasClient !== "+"} onChange={(e) => setClientNumer(e.target.value)} />
+                <Form.Control type="number" placeholder="0" min="0" value={clientNumber} disabled={asaasClient !== "+"} onChange={(e) => setClientNumer(e.target.value)} />
             </Form.Group>
             {asaasClient !== "+" ? 
                 <>

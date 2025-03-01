@@ -136,7 +136,7 @@ function FormEstagioRD({ estagio, selecionar }){
         <Form>
             <Form.Group className="mb-3">
                 <Form.Label>Atalho do estágio</Form.Label>
-                <Form.Control type="text" placeholder="Atalho do estágio" value={atalho} onChange={(e) => setAtalho(e.target.value)} />
+                <Form.Control type="text" placeholder="Atalho do estágio" value={atalho} onChange={(e) => setAtalho(e.target.value.toUpperCase().trim())} />
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>ID do estágio no RD Station CRM</Form.Label>

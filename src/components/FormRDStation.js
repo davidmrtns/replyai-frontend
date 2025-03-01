@@ -79,10 +79,10 @@ function FormRDStation(){
                 <Form.Label>Estágios do funil (selecione um estágio para modificá-lo)</Form.Label>
                 <Form.Select onChange={(opcao) => alterarEstagioSelecionado(opcao.target.value)}>
                     <option>--</option>
+                    <option value="+">+ Adicionar estágio</option>
                     {estagios ? estagios.map((estagio) => (
                         <option value={estagio.id}>{estagio.atalho}</option>
                     )) : ""}
-                    <option value="+">Adicionar estágio</option>
                 </Form.Select>
             </Form.Group>
             {estagioSelecionado ?

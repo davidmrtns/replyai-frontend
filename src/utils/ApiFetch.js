@@ -22,7 +22,8 @@ class ApiFetch{
                 const data = await response.json();
                 return data;
             }else if(response.status === 401){
-                alert("Não foi possível fazer login com essas credenciais. Verifique se os dados estão corretos e se você tem acesso a esse sistema");
+                const errorData = await response.json();
+                alert(errorData.detail || "Não foi possível fazer login com essas credenciais. Verifique se os dados estão corretos e se você tem acesso a esse sistema");
                 return null;
             }
         }catch{
@@ -160,7 +161,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarEmpresa(nome, slug, fusoHorario, empresaAtiva, openaiApiKey){
+    async adicionarEmpresa(nome, slug, fusoHorario, empresaAtiva, openaiApiKey, elevenLabsApiKey){
         var resposta;
 
         try{
@@ -175,7 +176,8 @@ class ApiFetch{
                     slug: slug,
                     fuso_horario: fusoHorario,
                     empresa_ativa: empresaAtiva,
-                    openai_api_key: openaiApiKey
+                    openai_api_key: openaiApiKey,
+                    elevenlabs_api_key: elevenLabsApiKey
                 })
             });
         }catch{
@@ -215,7 +217,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesBasicas(slug, nome, fusoHorario, empresaAtiva){
+    async editarInformacoesBasicas(slug, nome, fusoHorario, empresaAtiva, openaiApiKey, elevenLabsApiKey){
         var resposta;
 
         try{
@@ -228,7 +230,9 @@ class ApiFetch{
                 body: JSON.stringify({
                     nome: nome,
                     fuso_horario: fusoHorario,
-                    empresa_ativa: empresaAtiva
+                    empresa_ativa: empresaAtiva,
+                    openai_api_key: openaiApiKey,
+                    elevenlabs_api_key: elevenLabsApiKey
                 })
             });
         }catch{
@@ -303,24 +307,19 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarMidia(slug, url, tipo, mediatype, nome, atalho, ordem){
+    async adicionarMidia(slug, atalho, ordem, arquivo){
         var resposta;
+        const formData = new FormData();
+
+        formData.append("atalho", atalho);
+        formData.append("ordem", ordem);
+        formData.append("arquivo", arquivo);
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/midia`, {
+            resposta = await fetch(`${this.urlBase}/midia/${slug}`, {
                 method: "post",
                 credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    url: url,
-                    tipo: tipo,
-                    mediatype: mediatype,
-                    nome: nome,
-                    atalho: atalho,
-                    ordem: ordem
-                })
+                body: formData
             });
         }catch{
             resposta = null;
@@ -329,22 +328,17 @@ class ApiFetch{
         return resposta;
     }
 
-    async alterarMidia(slug, id, url, tipo, mediatype, nome, atalho, ordem){
+    async alterarMidia(slug, id, atalho, ordem){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/midia`, {
+            resposta = await fetch(`${this.urlBase}/midia/${slug}/${id}`, {
                 method: "put",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: id,
-                    url: url,
-                    tipo: tipo,
-                    mediatype: mediatype,
-                    nome: nome,
                     atalho: atalho,
                     ordem: ordem
                 })
@@ -360,7 +354,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/midia/${id}`, {
+            resposta = await fetch(`${this.urlBase}/midia/${slug}/${id}`, {
                 method: "delete",
                 credentials: "include",
                 headers: {
@@ -395,11 +389,11 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarAssistente(slug, nome, assistantId, proposito, atalho, voz){
+    async adicionarAssistente(slug, nome, instrucoes, proposito, atalho, voz){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/assistente`, {
+            resposta = await fetch(`${this.urlBase}/assistente/${slug}/`, {
                 method: "post",
                 credentials: "include",
                 headers: {
@@ -407,7 +401,7 @@ class ApiFetch{
                 },
                 body: JSON.stringify({
                     nome: nome,
-                    assistant_id: assistantId,
+                    instrucoes: instrucoes,
                     proposito: proposito,
                     atalho: atalho,
                     voz: voz
@@ -420,20 +414,19 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarAssistente(slug, id, nome, assistantId, proposito, atalho, voz){
+    async editarAssistente(slug, id, nome, instrucoes, proposito, atalho, voz){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/assistente`, {
+            resposta = await fetch(`${this.urlBase}/assistente/${slug}/${id}`, {
                 method: "put",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: id,
                     nome: nome,
-                    assistant_id: assistantId,
+                    instrucoes: instrucoes,
                     proposito: proposito,
                     atalho: atalho,
                     voz: voz
@@ -450,7 +443,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/assistente/${id}`, {
+            resposta = await fetch(`${this.urlBase}/assistente/${slug}/${id}`, {
                 method: "delete",
                 credentials: "include",
                 headers: {
@@ -464,22 +457,25 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarVoz(slug, voiceId, stability, similarityBoost, style){
+    async adicionarVoz(slug, nome, descricao, stability, similarityBoost, style, arquivos){
         var resposta;
+        const formData = new FormData();
+
+        formData.append("nome", nome);
+        formData.append("descricao", descricao);
+        formData.append("stability", stability);
+        formData.append("similarity_boost", similarityBoost);
+        formData.append("style", style);
+
+        arquivos.forEach((arquivo, index) => {
+            formData.append("arquivos", arquivo);
+        });
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/voz`, {
+            resposta = await fetch(`${this.urlBase}/voz/${slug}`, {
                 method: "post",
                 credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    voice_id: voiceId,
-                    stability: stability,
-                    similarity_boost: similarityBoost,
-                    style: style
-                })
+                body: formData
             });
         }catch{
             resposta = null;
@@ -488,19 +484,19 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarVoz(slug, id, voiceId, stability, similarityBoost, style){
+    async editarVoz(slug, id, nome, descricao, stability, similarityBoost, style){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/voz`, {
+            resposta = await fetch(`${this.urlBase}/voz/${slug}/${id}`, {
                 method: "put",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: id,
-                    voice_id: voiceId,
+                    nome: nome,
+                    descricao: descricao,
                     stability: stability,
                     similarity_boost: similarityBoost,
                     style: style
@@ -517,7 +513,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes/voz/${id}`, {
+            resposta = await fetch(`${this.urlBase}/voz/${slug}/${id}`, {
                 method: "delete",
                 credentials: "include",
                 headers: {
@@ -558,11 +554,11 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarClienteDigisac(slug, slugDigisac, token, userId, serviceId){
+    async adicionarClienteDigisac(slug, slugDigisac, token){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/digisac`, {
+            resposta = await fetch(`${this.urlBase}/digisac/${slug}`, {
                 method: "post",
                 credentials: "include",
                 headers: {
@@ -570,9 +566,7 @@ class ApiFetch{
                 },
                 body: JSON.stringify({
                     slug: slugDigisac,
-                    token: token,
-                    user_id: userId,
-                    service_id: serviceId
+                    token: token
                 })
             });
         }catch{
@@ -586,7 +580,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/digisac`, {
+            resposta = await fetch(`${this.urlBase}/digisac/${slug}`, {
                 method: "put",
                 credentials: "include",
                 headers: {
@@ -610,7 +604,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/digisac/departamento`, {
+            resposta = await fetch(`${this.urlBase}/digisac/${slug}/departamentos`, {
                 method: "post",
                 credentials: "include",
                 headers: {
@@ -635,14 +629,13 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/digisac/departamento`, {
+            resposta = await fetch(`${this.urlBase}/digisac/${slug}/departamentos/${id}`, {
                 method: "put",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: id,
                     atalho: atalho,
                     comentario: comentario,
                     department_id: departmentId,
@@ -661,7 +654,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/digisac/departamento/${id}`, {
+            resposta = await fetch(`${this.urlBase}/digisac/${slug}/departamentos/${id}`, {
                 method: "delete",
                 credentials: "include",
                 headers: {
@@ -675,19 +668,18 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarClienteEvolutionAPI(slug, apiKey, instanceName){
+    async adicionarClienteEvolutionAPI(slug, nomeInstancia){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/evolutionapi`, {
+            resposta = await fetch(`${this.urlBase}/evolutionapi/${slug}`, {
                 method: "post",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    api_key: apiKey,
-                    instance_name: instanceName
+                    nome_instancia: nomeInstancia
                 })
             });
         }catch{
@@ -697,29 +689,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesEvolutionAPI(slug, apiKey, instanceName){
-        var resposta;
-
-        try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens/evolutionapi`, {
-                method: "put",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    api_key: apiKey,
-                    instance_name: instanceName
-                })
-            });
-        }catch{
-            resposta = null;
-        }
-
-        return resposta;
-    }
-
-    async editarInformacoesAgenda(slug, tipoCliente, tipoCancelamento, ativarConfirmacao){
+    async editarInformacoesAgenda(slug, tipoCliente, tipoCancelamento, ativarConfirmacao, duracaoEvento, horaInicioAgenda, horaFinalAgenda){
         var resposta;
 
         try{
@@ -732,7 +702,10 @@ class ApiFetch{
                 body: JSON.stringify({
                     tipo_cliente: tipoCliente,
                     tipo_cancelamento_evento: tipoCancelamento,
-                    ativar_confirmacao: ativarConfirmacao
+                    ativar_confirmacao: ativarConfirmacao,
+                    duracao_evento: duracaoEvento,
+                    hora_inicio_agenda: horaInicioAgenda,
+                    hora_final_agenda: horaFinalAgenda
                 })
             });
         }catch{
@@ -746,7 +719,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/agenda`, {
+            resposta = await fetch(`${this.urlBase}/agenda/${slug}`, {
                 method: "post",
                 credentials: "include",
                 headers: {
@@ -768,14 +741,13 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/agenda`, {
+            resposta = await fetch(`${this.urlBase}/agenda/${slug}/${id}`, {
                 method: "put",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: id,
                     endereco: endereco,
                     atalho: atalho
                 })
@@ -791,7 +763,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/agenda/${id}`, {
+            resposta = await fetch(`${this.urlBase}/agenda/${slug}/${id}`, {
                 method: "delete",
                 credentials: "include",
                 headers: {
@@ -805,27 +777,17 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarClienteOutlook(slug, clientId, tenantId, clientSecret, duracaoEvento, usuarioPadrao, horaInicial, horaFinal, fusoHorario){
+    async listarFusosPytz(){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/outlook`, {
-                method: "post",
+            resposta = await fetch(`${this.urlBase}/agenda/fusos`, {
+                method: "get",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    client_id: clientId,
-                    tenant_id: tenantId,
-                    client_secret: clientSecret,
-                    duracao_evento: duracaoEvento,
-                    usuario_padrao: usuarioPadrao,
-                    hora_inicial: horaInicial,
-                    hora_final: horaFinal,
-                    fuso_horario: fusoHorario
-                })
-            });
+                }
+            }).then((response) => response.json());
         }catch{
             resposta = null;
         }
@@ -833,7 +795,7 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesOutlook(slug, clientId, tenantId, clientSecret, duracaoEvento, usuarioPadrao, horaInicial, horaFinal, fusoHorario){
+    async editarInformacoesOutlook(slug, fusoHorario){
         var resposta;
 
         try{
@@ -844,13 +806,6 @@ class ApiFetch{
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    client_id: clientId,
-                    tenant_id: tenantId,
-                    client_secret: clientSecret,
-                    duracao_evento: duracaoEvento,
-                    usuario_padrao: usuarioPadrao,
-                    hora_inicial: horaInicial,
-                    hora_final: horaFinal,
                     fuso_horario: fusoHorario
                 })
             });
@@ -861,41 +816,8 @@ class ApiFetch{
         return resposta;
     }
 
-    async adicionarClienteGoogleCalendar(slug, projectId, privateKeyId, privateKey, clientEmail, clientId, clientX509CertUrl, apiKey, duracaoEvento, horaInicial, horaFinal, fusoHorario){
+    async editarInformacoesGoogleCalendar(slug, fusoHorario){
         var resposta;
-        privateKey = privateKey.replace(/\r?\n/g, "\\n");
-
-        try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/googlecalendar`, {
-                method: "post",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    project_id: projectId,
-                    private_key_id: privateKeyId,
-                    private_key: privateKey,
-                    client_email: clientEmail,
-                    client_id: clientId,
-                    client_x509_cert_url: clientX509CertUrl,
-                    api_key: apiKey,
-                    duracao_evento: duracaoEvento,
-                    hora_inicial: horaInicial,
-                    hora_final: horaFinal,
-                    fuso_horario: fusoHorario
-                })
-            });
-        }catch{
-            resposta = null;
-        }
-
-        return resposta;
-    }
-
-    async editarInformacoesGoogleCalendar(slug, projectId, privateKeyId, privateKey, clientEmail, clientId, clientX509CertUrl, apiKey, duracaoEvento, horaInicial, horaFinal, fusoHorario){
-        var resposta;
-        privateKey = privateKey.replace(/\r?\n/g, "\\n");
 
         try{
             resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/googlecalendar`, {
@@ -905,16 +827,6 @@ class ApiFetch{
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    project_id: projectId,
-                    private_key_id: privateKeyId,
-                    private_key: privateKey,
-                    client_email: clientEmail,
-                    client_id: clientId,
-                    client_x509_cert_url: clientX509CertUrl,
-                    api_key: apiKey,
-                    duracao_evento: duracaoEvento,
-                    hora_inicial: horaInicial,
-                    hora_final: horaFinal,
                     fuso_horario: fusoHorario
                 })
             });
@@ -1167,6 +1079,278 @@ class ApiFetch{
             await fetch(`${this.urlBase}/empresa/${slug}/message_client`, {
                 method: "get",
                 credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async obterInstrucoes(slug, id){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/assistente/${slug}/${id}`, {
+                method: "get",
+                credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async obterVozElevenLabs(slug, id){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/voz/${slug}/${id}`, {
+                method: "get",
+                credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async criarInstanciaEvolution(slug, nomeInstancia, webhook){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}`, {
+                method: "post",
+                credentials: "include",
+                body: JSON.stringify({
+                    nome_instancia: nomeInstancia,
+                    webhook_url: webhook
+                })
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async obterInstanciaEvolution(slug, apiKey){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}`, {
+                method: "get",
+                credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async conectarInstanciaEvolution(slug, apiKey){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/conectar`, {
+                method: "get",
+                credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async reiniciarInstanciaEvolution(slug, apiKey){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/reiniciar`, {
+                method: "put",
+                credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async desligarInstanciaEvolution(slug, apiKey){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/desligar`, {
+                method: "delete",
+                credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async checarConexaoInstanciaEvolution(slug, apiKey){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/checar-conexao`, {
+                method: "get",
+                credentials: "include"
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async adicionarWebhookEvolutionAPI(slug, apiKey, webhookUrl, habilitado){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/webhook`, {
+                method: "post",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    webhook_url: webhookUrl,
+                    habilitado: habilitado
+                })
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async listarWebhooksEvolutionAPI(slug, apiKey){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/webhook`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async listarServicosDigisac(slug, pagina, nome, id){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/digisac/${slug}/servicos?pagina=${pagina}&nome=${nome}&id=${id}`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async listarUsuariosDigisac(slug, pagina, nome, id){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/digisac/${slug}/usuarios?pagina=${pagina}&nome=${nome}&id=${id}`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async listarDepartamentosDigisac(slug, pagina, nome, id){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/digisac/${slug}/departamentos?pagina=${pagina}&nome=${nome}&id=${id}`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async obterLinkMicrosoft(slug){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/microsoft/${slug}/auth-link`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async listarFusosOutlook(slug){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/microsoft/${slug}/timezones`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async obterLinkGoogle(slug){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/google/${slug}/auth-link`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             }).then((response) => response.json()).then((data) => {resposta = data});
         }catch{
             resposta = null;

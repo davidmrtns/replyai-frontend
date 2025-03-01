@@ -9,10 +9,9 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 function FormMidiaUnica({ midia, selecionar }){
     const apiFetch = new ApiFetch();
     const { empresa, setEmpresa } = useContext(EmpresaContext);
+    const [arquivos, setArquivos] = useState([]);
     const [url, setUrl] = useState("");
-    const [tipo, setTipo] = useState("");
     const [mediatype, setMediatype] = useState("");
-    const [nome, setNome] = useState("");
     const [atalho, setAtalho] = useState("");
     const [ordem, setOrdem] = useState(0);
     const [enviado, setEnviado] = useState(false);
@@ -21,16 +20,12 @@ function FormMidiaUnica({ midia, selecionar }){
     useEffect(() => {
         if(midia){
             setUrl(midia.url || "");
-            setTipo(midia.tipo || "");
             setMediatype(midia.mediatype || "");
-            setNome(midia.nome || "");
             setAtalho(midia.atalho || "");
             setOrdem(midia.ordem || 0);
         }else{
             setUrl("");
-            setTipo("");
             setMediatype("");
-            setNome("");
             setAtalho("");
             setOrdem(0);
         }
@@ -77,7 +72,7 @@ function FormMidiaUnica({ midia, selecionar }){
         setEnviado(true);
         
         if(midia === "+"){
-            var resposta = await apiFetch.adicionarMidia(empresa.slug, url, tipo, mediatype, nome, atalho, ordem);
+            var resposta = await apiFetch.adicionarMidia(empresa.slug, atalho, ordem, arquivos[0]);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 addMidia(resposta);
@@ -86,7 +81,7 @@ function FormMidiaUnica({ midia, selecionar }){
                 alert("Ocorreu um erro");
             }
         }else{
-            var resposta = await apiFetch.alterarMidia(empresa.slug, midia.id, url, tipo, mediatype, nome, atalho, ordem);
+            var resposta = await apiFetch.alterarMidia(empresa.slug, midia.id, atalho, ordem);
             if(resposta && resposta.status === 200){
                 resposta = await resposta.json();
                 updMidia(midia.id, resposta);
@@ -116,47 +111,68 @@ function FormMidiaUnica({ midia, selecionar }){
         setExcluido(false);
     }
 
+    const adicionarArquivo = async (event) => {
+        const tamanhoMaximoMidia = 16 * 1024 * 1024;
+        const tamanhoMaximoDocumento = 2 * 1024 * 1024 * 1024;
+        const tiposPermitidosMidia = ["image/", "audio/", "video/"];
+        const arquivoSelecionado = event.target.files[0];
+
+        if(!arquivoSelecionado){
+            alert("Nenhum arquivo selecionado");
+            setArquivos([]);
+            event.target.value = "";
+            return;
+        }
+
+        const tipoArquivo = arquivoSelecionado.type;
+        const deveValidarTamanho = tiposPermitidosMidia.some((tipo) => tipoArquivo.startsWith(tipo));
+
+        if(deveValidarTamanho && arquivoSelecionado.size > tamanhoMaximoMidia){
+            alert("O arquivo selecionado excede o limite de 16MB.");
+            setArquivos([]);
+            event.target.value = "";
+            return;
+        }
+
+        if(arquivoSelecionado.size > tamanhoMaximoDocumento){
+            alert("O arquivo selecionado excede o limite de 2GB.");
+            setArquivos([]);
+            event.target.value = "";
+            return;
+        }
+
+        setArquivos([arquivoSelecionado]);
+    }
+
     return(
         <Form>
             <Form.Group className="mb-3">
-                <Form.Label>URL pública da mídia</Form.Label>
-                <div className="d-flex align-items-start gap-2">
-                    <Form.Control type="text" placeholder="URL pública da mídia" value={url} onChange={(e) => setUrl(e.target.value)} className="flex-grow-1" />
-                    {tipo ?
-                        tipo === "image" ?
-                            <img src={url} className="img-thumbnail img-fluid" style={{ width: "200px", height: "auto" }} />
-                        : tipo === "video" ?
-                            <video src={url} width={200} controls />
-                        : tipo === "audio" ?
-                            <audio src={url} controls />
-                        : ""
-                    : ""}
-                </div>
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label>Tipo da mídia</Form.Label>
-                <Form.Select value={tipo} onChange={(opcao) => setTipo(opcao.target.value)}>
-                    <option value="image">Imagem</option>
-                    <option value="audio">Áudio</option>
-                    <option value="video">Vídeo</option>
-                    <option value="document">Documento</option>
-                </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label>Mimetype/Mediatype</Form.Label>
-                <Form.Control type="text" placeholder="Mimetype/Mediatype" value={mediatype} onChange={(e) => setMediatype(e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label>Nome do arquivo</Form.Label>
-                <Form.Control type="text" placeholder="Nome do arquivo" value={nome} onChange={(e) => setNome(e.target.value)} />
+                <Form.Label className="d-block">Mídia</Form.Label>
+                {midia === "+" ? 
+                    <Form.Control type="file" onChange={adicionarArquivo} /> 
+                : 
+                    <div className="d-flex flex-column gap-2">
+                        {mediatype?.startsWith("image/") ? 
+                            <img className="rounded border border-1" src={url} width={200} /> 
+                        : mediatype?.startsWith("audio/") ? 
+                            <audio controls src={url} />
+                        : mediatype?.startsWith("video/") ? 
+                            <video controls className="rounded border border-1" src={url} width={200} />
+                        :
+                            <p className="fst-italic opacity-75 mb-0">Esse arquivo não tem uma visualização. <a href={url} target="_blank">Baixar</a></p>
+                        }
+                    </div>
+                }
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Atalho</Form.Label>
-                <Form.Control type="text" placeholder="Atalho" value={atalho} onChange={(e) => setAtalho(e.target.value)} />
+                <p className="fst-italic opacity-75">As IAs poderão enviar a sua mídia utilizando este atalho. Caso queira enviar vários arquivos no mesmo comando, insira um atalho já existente.</p>
+                <Form.Control type="text" placeholder="Atalho" value={atalho} onChange={(e) => setAtalho(e.target.value.toUpperCase().trim())} />
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Ordem do arquivo</Form.Label>
-                <Form.Control type="number" placeholder="Ordem do arquivo" value={ordem} onChange={(e) => setOrdem(e.target.value)} />
+                <p className="fst-italic opacity-75">A ordem é utilizada para envios de múltiplos arquivos de mesmo código de atalho.</p>
+                <Form.Control type="number" placeholder="Ordem do arquivo" value={ordem} onChange={(e) => setOrdem(e.target.value)} min="0" step="1" />
             </Form.Group>
             <div className="d-flex gap-2">
                 <Button onClick={() => enviar()} disabled={enviado}>
