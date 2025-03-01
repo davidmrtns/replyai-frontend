@@ -41,7 +41,7 @@ function FormGoogleCalendar(){
 
     const enviar = async () => {
         setEnviado(true);
-        var resposta = await apiFetch.editarInformacoesGoogleCalendar(empresa.slug, timezone);
+        var resposta = await apiFetch.editarFusoHorarioGoogleCalendar(empresa.slug, timezone);
 
         if(resposta && resposta.status === 200){
             resposta = await resposta.json();

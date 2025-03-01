@@ -41,7 +41,7 @@ function FormOutlook(){
 
     const enviar = async () => {
         setEnviado(true);
-        var resposta = await apiFetch.editarInformacoesOutlook(empresa.slug, timeZone);
+        var resposta = await apiFetch.editarFusoHorarioOutlook(empresa.slug, timeZone);
 
         if(resposta && resposta.status === 200){
             resposta = await resposta.json();

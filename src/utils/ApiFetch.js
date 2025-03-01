@@ -795,11 +795,11 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesOutlook(slug, fusoHorario){
+    async editarFusoHorarioOutlook(slug, fusoHorario){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/outlook`, {
+            resposta = await fetch(`${this.urlBase}/microsoft/${slug}/timezone`, {
                 method: "put",
                 credentials: "include",
                 headers: {
@@ -816,11 +816,11 @@ class ApiFetch{
         return resposta;
     }
 
-    async editarInformacoesGoogleCalendar(slug, fusoHorario){
+    async editarFusoHorarioGoogleCalendar(slug, fusoHorario){
         var resposta;
 
         try{
-            resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda/googlecalendar`, {
+            resposta = await fetch(`${this.urlBase}/google/${slug}/timezone`, {
                 method: "put",
                 credentials: "include",
                 headers: {
