@@ -218,7 +218,8 @@ function FormAssistenteUnico({ assistente, selecionar }){
                                 Cada assistente segue um formato específico de prompt e resposta, conforme seu propósito – você 
                                 pode conferir esses padrões no menu abaixo. Se desejar, copie o prompt para a caixa de instruções 
                                 clicando no botão abaixo e, em seguida, personalize os campos necessários para atender às necessidades do 
-                                seu assistente.
+                                seu assistente. Se você não tiver muita experiência com a criação de prompts, experimente utilizar os exemplos
+                                substituindo apenas os valores dentro dos colchetes [ ].
                             </p>
                             <Button className="mb-2" onClick={() => setInstrucoes(promptExemplo)}>
                                 <FontAwesomeIcon icon={faCopy} /> Copiar exemplo para a caixa de instruções

@@ -195,6 +195,7 @@ function UsuarioUnico({ novoUsuario }){
                                 : ""}
                                 <Form.Group className="mb-3">
                                     <Form.Label>Empresa</Form.Label>
+                                    <p className="fst-italic opacity-75">Adicionar uma empresa ao usuário irá restringí-lo de acessar outras empresas e editar informações globais da ReplyAI, como os exemplos de prompt.</p>
                                     <Form.Select value={idEmpresa} onChange={(e) => setIdEmpresa(e.target.value)}>
                                         {!usuarioLogado.id_empresa ? <option value="">--</option> : ""}
                                         {empresas ? empresas.map((empresa) => (

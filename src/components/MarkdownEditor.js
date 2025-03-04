@@ -23,7 +23,7 @@ const MarkdownEditor = ({ instrucoes, setInstrucoes }) => {
         <div style={{ display: "flex", gap: "20px" }}>
             <div style={{ flex: 1 }}>
                 <Form.Group className="mb-3">
-                    <Form.Label>Instruções (Markdown)</Form.Label>
+                    <Form.Label>Instruções (<a href="https://www.markdowncando.com/pt/reference/cheatsheet/" target="_blank" >Markdown</a>)</Form.Label>
                     <Form.Control
                         as="textarea"
                         ref={textareaRef}

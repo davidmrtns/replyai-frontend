@@ -107,6 +107,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
             : ""}
             <Form.Group className="mb-3">
                 <Form.Label>Fuso-horário</Form.Label>
+                <p className="fst-italic opacity-75">Este fuso-horário será utilizado para armazenar a hora da última mensagem enviada pelo cliente dentro da janela de conversa, com o objetivo de disparar mensagens de retomada de conversa.</p>
                 <Form.Select onChange={(opcao) => setFusoHorario(opcao.target.value)} value={fusoHorario}>
                     <option>--</option>
                     {timezones ? timezones.map((timezone) => (
