@@ -18,3 +18,12 @@
   font-weight: 500;
   font-style: normal;
 }
+
+.politica{
+  background-color: #fff;
+  color: #333;
+}
+
+.politica h1, .politica h3{
+  color: #6340e3;
+}
