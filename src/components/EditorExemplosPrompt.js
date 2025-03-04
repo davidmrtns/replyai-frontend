@@ -42,7 +42,7 @@ function EditorExemplosPrompt(){
 
         if(acao === "criar"){
             var resposta = await apiFetch.criarExemploPrompt(tipoSelecionado, exemploPrompt);
-            if(resposta){
+            if(resposta?.prompt){
                 alert("Exemplo de prompt criado com sucesso!");
                 setAcao("editar");
             }else{
@@ -50,7 +50,7 @@ function EditorExemplosPrompt(){
             }
         }else if(acao === "editar"){
             var resposta = await apiFetch.editarExemploPrompt(tipoSelecionado, exemploPrompt);
-            if(resposta){
+            if(resposta?.prompt){
                 alert("Exemplo de prompt editado com sucesso!");
             }else{
                 alert("Ocorreu um erro ao editar o exemplo de prompt...");
@@ -64,7 +64,7 @@ function EditorExemplosPrompt(){
         setEnviado(true);
 
         var resposta = await apiFetch.excluirExemploPrompt(tipoSelecionado);
-        if(resposta){
+        if(resposta === true){
             alert("Exemplo de prompt excluído com sucesso");
             setAcao("criar");
             setExemploPrompt("");

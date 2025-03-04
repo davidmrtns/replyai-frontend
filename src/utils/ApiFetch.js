@@ -1363,7 +1363,7 @@ class ApiFetch{
         var resposta;
 
         try{
-            await fetch(`${this.urlBase}/exemplo`, {
+            await fetch(`${this.urlBase}/exemplo/`, {
                 method: "post",
                 credentials: "include",
                 headers: {
