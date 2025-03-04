@@ -7,6 +7,7 @@ import NovaEmpresa from './components/NovaEmpresa';
 import UsuarioUnico from './components/UsuarioUnico';
 import Usuarios from './components/Usuarios';
 import AuthFeedback from './components/AuthFeedback';
+import EditorExemplosPrompt from './components/EditorExemplosPrompt';
 
 export async function loader({ params }) {
     return params;
@@ -26,6 +27,7 @@ const AppRoutes = () => {
                 <Route path="usuarios" element={<Usuarios />} />
                 <Route path="usuario" element={<UsuarioUnico novoUsuario={false} />} />
                 <Route path="novo-usuario" element={<UsuarioUnico novoUsuario={true} />} />
+                <Route path="/prompts" element={<EditorExemplosPrompt />} />
             </Route>
             <Route path="/auth-success" element={<AuthFeedback status="success" />} />
             <Route path="/auth-failed" element={<AuthFeedback status="failed" />} />

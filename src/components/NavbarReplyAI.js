@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faRightFromBracket, faScroll } from '@fortawesome/free-solid-svg-icons';
 import ApiFetch from '../utils/ApiFetch';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -38,6 +38,11 @@ function NavbarReplyAI(){
                         : ""}
                     </Nav>
                     <div className="d-flex gap-2">
+                        {usuarioLogado?.admin && !usuarioLogado?.id_empresa ? 
+                            <Button variant="outline-light" onClick={() => navigate("/prompts")}>
+                                <FontAwesomeIcon icon={faScroll} />
+                            </Button>
+                        : ""}
                         <Button variant="outline-light" onClick={() => navigate("/usuario")}>
                             <FontAwesomeIcon icon={faUser} />
                         </Button>

@@ -62,7 +62,7 @@ function FormAssistentes(){
             <h1>Assistentes</h1>
             <Form.Group className="mb-3">
                 <Form.Label>Assistente padrão</Form.Label>
-                <p className="fst-italic opacity-75">Apenas assistentes do tipo "responder" podem ser selecionados como assistente padrão.</p>
+                <p className="fst-italic opacity-75">Apenas assistentes de propósito "responder" podem ser selecionados como assistente padrão.</p>
                 <Form.Select onChange={(e) => setAssPadraoSelecionado(e.target.value)}>
                     <option>--</option>
                     {assistentes ? assistentes.map((assistente) => (

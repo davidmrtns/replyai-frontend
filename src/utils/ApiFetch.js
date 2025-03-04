@@ -1358,6 +1358,85 @@ class ApiFetch{
 
         return resposta;
     }
+
+    async criarExemploPrompt(tipo, prompt){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/exemplo`, {
+                method: "post",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    tipo_assistente: tipo,
+                    prompt: prompt
+                })
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async obterExemploPrompt(tipo){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/exemplo/${tipo}`, {
+                method: "get",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async editarExemploPrompt(tipo, prompt){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/exemplo/${tipo}`, {
+                method: "put",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
+
+    async excluirExemploPrompt(tipo){
+        var resposta;
+
+        try{
+            await fetch(`${this.urlBase}/exemplo/${tipo}`, {
+                method: "delete",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json()).then((data) => {resposta = data});
+        }catch{
+            resposta = null;
+        }
+
+        return resposta;
+    }
 }
 
 export default ApiFetch;

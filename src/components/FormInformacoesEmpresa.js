@@ -19,6 +19,7 @@ function FormInformacoesEmpresa({ novaEmpresa }){
     const [webhook, setWebhook] = useState("");
     const [openaiApiKey, setOpenaiApiKey] = useState("");
     const [elevenLabsApiKey, setElevenLabsApiKey] = useState("");
+    const [timezones, setTimezones] = useState([]);
     const [enviado, setEnviado] = useState(false);
     const [exibirOpenAIKey, setExibirOpenAIKey] = useState(false);
     const [exibirElevenLabsKey, setExibirElevenLabsKey] = useState(false);
@@ -34,7 +35,18 @@ function FormInformacoesEmpresa({ novaEmpresa }){
             setFusoHorario(empresa.fuso_horario || "");
             setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`);
         }
+
+        listarFusos();
     }, [empresa])
+
+    const listarFusos = async () => {
+        var dados = await apiFetch.listarFusosPytz();
+        if(dados){
+            setTimezones(dados.timezones);
+        }else{
+            setTimezones([]);
+        }
+    }
 
     const copiarTexto = async (texto) => {
         try{
@@ -95,9 +107,17 @@ function FormInformacoesEmpresa({ novaEmpresa }){
             : ""}
             <Form.Group className="mb-3">
                 <Form.Label>Fuso-horário</Form.Label>
-                <Form.Control type="text" placeholder="Fuso-horário" value={fusoHorario} onChange={(e) => setFusoHorario(e.target.value)} />
+                <Form.Select onChange={(opcao) => setFusoHorario(opcao.target.value)} value={fusoHorario}>
+                    <option>--</option>
+                    {timezones ? timezones.map((timezone) => (
+                        <option value={timezone}>{timezone}</option>
+                    )) : ""}
+                </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
+                <p className="fst-italic opacity-75">Se uma empresa for desativada, os assistentes de IA dela não responderão mais aos clientes, nenhum 
+                    fluxo automatizado (cobrança, lembrete de pagamentos, confirmação de atendimentos) será disparado e nenhum usuário dessa 
+                    empresa poderá fazer login na plataforma.</p>
                 <Form.Check
                     type="switch"
                     id="custom-switch"
