@@ -16,6 +16,7 @@ A lógica da aplicação, autenticação, regras de negócio e manipulação de 
 - 🛠️ Gerenciamento de automações e rotinas;
 - 🏢 Organização modular por empresa (usuários podem gerenciar múltiplas empresas, cada uma com suas próprias configurações de atendimento).
 
+## Desenvolvimento
 ### Tecnologias utilizadas
 - **Frontend**: React, Bootstrap;
 
