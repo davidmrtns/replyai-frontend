@@ -18,7 +18,7 @@ A lógica da aplicação, autenticação, regras de negócio e manipulação de 
 
 ## Desenvolvimento
 ### Tecnologias utilizadas
-- **Frontend**: React, Bootstrap;
+- **Frontend**: React, Bootstrap.
 
 ## Autor
 - David Martins - [@davidmrtns](https://github.com/davidmrtns/)
