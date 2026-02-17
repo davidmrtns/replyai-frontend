@@ -4,26 +4,27 @@
   background-color: #6340e3;
 }
 
-.logo{
+.logo {
   width: 27px;
   height: 27px;
 }
 
-.logo path.cls-2{
+.logo path.cls-2 {
   fill: #ffffff;
 }
 
-.titulo{
-  font-family: "Poppins", serif;
+.titulo {
+  font-family: 'Poppins', serif;
   font-weight: 500;
   font-style: normal;
 }
 
-.politica{
+.politica {
   background-color: #fff;
   color: #333;
 }
 
-.politica h1, .politica h3{
+.politica h1,
+.politica h3 {
   color: #6340e3;
 }
