@@ -1,8 +1,8 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './pages/Login';
 import ConfigEmpresa from './components/ConfigEmpresa';
 import RotaPrivada from './components/RotaPrivada';
-import Empresas from './components/Empresas';
+import Companies from './pages/Companies';
 import NovaEmpresa from './components/NovaEmpresa';
 import UsuarioUnico from './components/UsuarioUnico';
 import Usuarios from './components/Usuarios';
@@ -20,8 +20,8 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<RotaPrivada />}>
         <Route index element={<Navigate to="empresas" replace />} />
-        <Route path="empresas">
-          <Route path="" element={<Empresas />} />
+        <Route path="companies">
+          <Route path="" element={<Companies />} />
           <Route path=":slug" loader={loader} element={<ConfigEmpresa />} />
         </Route>
         <Route path="nova-empresa" element={<NovaEmpresa />} />

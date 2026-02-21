@@ -1,36 +1,37 @@
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { useState } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Button, Container, InputGroup } from 'react-bootstrap';
 import ApiFetch from '../utils/ApiFetch';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [exibirSenha, setExibirSenha] = useState(false);
-  const [aguardando, setAguardando] = useState(false);
+const Login = () => {
   const navigate = useNavigate();
   const apiFetch = new ApiFetch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setAguardando(true);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const token = await apiFetch.login(username, password);
+  const handleSubmit = async (e: SubmitEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const token = await apiFetch.login(email, password);
 
     if (token !== null) {
       if (token.status === true) {
-        navigate('/empresas');
+        navigate('/companies');
       } else {
-        alert('Erro ao fazer login');
-        setAguardando(false);
+        alert('Error when trying to login');
+        setIsLoading(false);
       }
     }
 
-    setAguardando(false);
+    setIsLoading(false);
   };
 
   return (
@@ -40,33 +41,33 @@ function Login() {
         <FloatingLabel label="E-mail">
           <Form.Control
             type="email"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="nome@dominio.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="name@example.com"
             required={true}
             className="mb-3"
           />
         </FloatingLabel>
         <InputGroup className="mb-3">
-          <FloatingLabel label="Senha">
+          <FloatingLabel label="Password">
             <Form.Control
-              type={exibirSenha === true ? 'text' : 'password'}
+              type={showPassword === true ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder=""
               required={true}
             />
           </FloatingLabel>
-          <Button variant="outline-primary" onClick={() => setExibirSenha(!exibirSenha)}>
-            <FontAwesomeIcon icon={exibirSenha === true ? faEyeSlash : faEye} />
+          <Button variant="outline-primary" onClick={() => setShowPassword(!showPassword)}>
+            <FontAwesomeIcon icon={showPassword === true ? faEyeSlash : faEye} />
           </Button>
         </InputGroup>
-        <Button type="submit" disabled={aguardando}>
-          Fazer login
+        <Button type="submit" disabled={isLoading}>
+          Login
         </Button>
       </Form>
     </Container>
   );
-}
+};
 
 export default Login;
