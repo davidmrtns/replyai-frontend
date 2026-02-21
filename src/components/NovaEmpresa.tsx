@@ -1,11 +1,11 @@
-import FormInformacoesEmpresa from './FormInformacoesEmpresa'
-import NavbarReplyAI from './NavbarReplyAI'
-import { Container } from 'react-bootstrap'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { useAuth } from '../contexts/AuthContext'
+import FormInformacoesEmpresa from './FormInformacoesEmpresa';
+import NavbarReplyAI from './NavbarReplyAI';
+import { Container } from 'react-bootstrap';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { useAuth } from '../contexts/AuthContext';
 
 function NovaEmpresa() {
-  const { usuarioLogado } = useAuth()
+  const { usuarioLogado } = useAuth();
 
   return (
     <>
@@ -20,7 +20,7 @@ function NovaEmpresa() {
         )}
       </Container>
     </>
-  )
+  );
 }
 
-export default NovaEmpresa
+export default NovaEmpresa;

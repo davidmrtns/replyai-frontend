@@ -1,15 +1,15 @@
-import { faSquareCheck, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect } from 'react'
+import { faSquareCheck, faSquareXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect } from 'react';
 
 function AuthFeedback({ status }) {
   useEffect(() => {
-    document.body.style.backgroundColor = status === 'success' ? 'green' : 'red'
+    document.body.style.backgroundColor = status === 'success' ? 'green' : 'red';
 
     return () => {
-      document.body.style.backgroundColor = ''
-    }
-  }, [status])
+      document.body.style.backgroundColor = '';
+    };
+  }, [status]);
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px', color: 'white' }}>
@@ -28,7 +28,7 @@ function AuthFeedback({ status }) {
       </h2>
       <p>Você pode fechar esta janela.</p>
     </div>
-  )
+  );
 }
 
-export default AuthFeedback
+export default AuthFeedback;

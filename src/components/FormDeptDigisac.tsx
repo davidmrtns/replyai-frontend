@@ -1,37 +1,37 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
-import AsyncSelect from 'react-select/async'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import AsyncSelect from 'react-select/async';
 
 function FormDeptDigisac({ departamento, selecionar }) {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [debounceTimeout, setDebounceTimeout] = useState(null)
-  const [atalho, setAtalho] = useState('')
-  const [comentario, setComentario] = useState('')
-  const [departmentId, setDepartmentId] = useState('')
-  const [userId, setUserId] = useState('')
-  const [dptConfirmacao, setDptConfirmacao] = useState(false)
-  const [selectedDepartment, setSelectedDepartment] = useState(null)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [enviado, setEnviado] = useState(false)
-  const [excluido, setExcluido] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
+  const [atalho, setAtalho] = useState('');
+  const [comentario, setComentario] = useState('');
+  const [departmentId, setDepartmentId] = useState('');
+  const [userId, setUserId] = useState('');
+  const [dptConfirmacao, setDptConfirmacao] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [enviado, setEnviado] = useState(false);
+  const [excluido, setExcluido] = useState(false);
 
   useEffect(() => {
     if (departamento) {
-      setAtalho(departamento.atalho || '')
-      setComentario(departamento.comentario || '')
-      setDepartmentId(departamento.departmentId || '')
-      setUserId(departamento.userId || '')
-      setDptConfirmacao(departamento.departamento_confirmacao || false)
-      carregarDepartamentoInicial(departamento?.departmentId || '')
-      carregarUsuarioInicial(departamento?.userId)
+      setAtalho(departamento.atalho || '');
+      setComentario(departamento.comentario || '');
+      setDepartmentId(departamento.departmentId || '');
+      setUserId(departamento.userId || '');
+      setDptConfirmacao(departamento.departamento_confirmacao || false);
+      carregarDepartamentoInicial(departamento?.departmentId || '');
+      carregarUsuarioInicial(departamento?.userId);
     }
-  }, [departamento])
+  }, [departamento]);
 
   const addDepartamento = (novoDepartamento) => {
     setEmpresa((prevEmpresa) => {
@@ -41,16 +41,16 @@ function FormDeptDigisac({ departamento, selecionar }) {
           departamentos: [...prevEmpresa.digisac_client[0].departamentos, novoDepartamento],
         },
         ...prevEmpresa.digisac_client.slice(1),
-      ]
+      ];
 
       return {
         ...prevEmpresa,
         digisac_client: clientAtualizado,
-      }
-    })
+      };
+    });
 
-    selecionar(novoDepartamento)
-  }
+    selecionar(novoDepartamento);
+  };
 
   const updDepartamento = (id, departamentoAtualizado) => {
     setEmpresa((prevEmpresa) => {
@@ -62,14 +62,14 @@ function FormDeptDigisac({ departamento, selecionar }) {
           ),
         },
         ...prevEmpresa.digisac_client.slice(1),
-      ]
+      ];
 
       return {
         ...prevEmpresa,
         digisac_client: clientAtualizado,
-      }
-    })
-  }
+      };
+    });
+  };
 
   const delDepartamento = (id) => {
     setEmpresa((prevEmpresa) => {
@@ -81,19 +81,19 @@ function FormDeptDigisac({ departamento, selecionar }) {
           ),
         },
         ...prevEmpresa.digisac_client.slice(1),
-      ]
+      ];
 
       return {
         ...prevEmpresa,
         digisac_client: clientAtualizado,
-      }
-    })
+      };
+    });
 
-    selecionar('+')
-  }
+    selecionar('+');
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (departamento === '+') {
       var resposta = await apiFetch.adicionarDepartamento(
@@ -103,13 +103,13 @@ function FormDeptDigisac({ departamento, selecionar }) {
         departmentId,
         userId,
         dptConfirmacao,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        addDepartamento(resposta)
-        alert('Departamento adicionado com sucesso')
+        resposta = await resposta.json();
+        addDepartamento(resposta);
+        alert('Departamento adicionado com sucesso');
       } else {
-        alert('Não foi possível adicionar o departamento')
+        alert('Não foi possível adicionar o departamento');
       }
     } else {
       var resposta = await apiFetch.editarDepartamento(
@@ -120,132 +120,132 @@ function FormDeptDigisac({ departamento, selecionar }) {
         departmentId,
         userId,
         dptConfirmacao,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        updDepartamento(departamento.id, resposta)
-        alert('Dados atualizados com sucesso')
+        resposta = await resposta.json();
+        updDepartamento(departamento.id, resposta);
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Ocorreu um erro ao atualizar os dados')
+        alert('Ocorreu um erro ao atualizar os dados');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const excluir = async () => {
-    setExcluido(true)
+    setExcluido(true);
 
-    var resposta = await apiFetch.removerDepartamento(empresa.slug, departamento.id)
+    var resposta = await apiFetch.removerDepartamento(empresa.slug, departamento.id);
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       if (resposta === true) {
-        delDepartamento(departamento.id)
-        alert('Departamento excluído com sucesso')
+        delDepartamento(departamento.id);
+        alert('Departamento excluído com sucesso');
       } else {
-        alert('Não foi possível excluir o departamento. Tente novamente')
+        alert('Não foi possível excluir o departamento. Tente novamente');
       }
     }
 
-    setExcluido(false)
-  }
+    setExcluido(false);
+  };
 
   const loadDebounce = (carregar) => (input, callback) => {
     if (debounceTimeout) {
-      clearTimeout(debounceTimeout)
+      clearTimeout(debounceTimeout);
     }
     const timeout = setTimeout(async () => {
-      const options = await carregar(input)
-      callback(options)
-    }, 500)
+      const options = await carregar(input);
+      callback(options);
+    }, 500);
 
-    setDebounceTimeout(timeout)
-  }
+    setDebounceTimeout(timeout);
+  };
 
   const carregarDepartamentoInicial = async (id) => {
     if (!id) {
-      setSelectedDepartment(null)
-      return
+      setSelectedDepartment(null);
+      return;
     }
 
     try {
-      var dados = await apiFetch.listarDepartamentosDigisac(empresa.slug, 1, '', id)
+      var dados = await apiFetch.listarDepartamentosDigisac(empresa.slug, 1, '', id);
       if (dados) {
-        var departamento = dados.data[0]
+        var departamento = dados.data[0];
 
         setSelectedDepartment({
           value: departamento.id,
           label: departamento.name,
-        })
+        });
       }
     } catch (error) {
-      console.error('Erro ao buscar departamentos:', error)
+      console.error('Erro ao buscar departamentos:', error);
     }
-  }
+  };
 
   const carregarUsuarioInicial = async (id) => {
-    if (!id) return
+    if (!id) return;
 
     try {
-      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, '', id)
+      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, '', id);
       if (dados) {
-        var usuario = dados.data[0]
+        var usuario = dados.data[0];
 
         setSelectedUser({
           value: usuario.id,
           label: usuario.name,
-        })
+        });
       }
     } catch (error) {
-      console.error('Erro ao buscar usuarios:', error)
+      console.error('Erro ao buscar usuarios:', error);
     }
-  }
+  };
 
   const carregarDepartamentos = async (input) => {
     if (input.length < 1) {
-      return []
+      return [];
     }
 
     try {
-      var dados = await apiFetch.listarDepartamentosDigisac(empresa.slug, 1, input, '')
+      var dados = await apiFetch.listarDepartamentosDigisac(empresa.slug, 1, input, '');
       if (dados) {
         const opcoesFormatadas = dados.data.map((departamento) => ({
           value: departamento.id,
           label: departamento.name,
-        }))
+        }));
 
-        return opcoesFormatadas
+        return opcoesFormatadas;
       } else {
-        return []
+        return [];
       }
     } catch (error) {
-      console.error('Erro ao buscar departamentos:', error)
-      return []
+      console.error('Erro ao buscar departamentos:', error);
+      return [];
     }
-  }
+  };
 
   const carregarUsuarios = async (input) => {
     if (input.length < 1) {
-      return []
+      return [];
     }
 
     try {
-      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, input, '')
+      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, input, '');
       if (dados) {
         const opcoesFormatadas = dados.data.map((usuario) => ({
           value: usuario.id,
           label: usuario.name,
-        }))
+        }));
 
-        return opcoesFormatadas
+        return opcoesFormatadas;
       } else {
-        return []
+        return [];
       }
     } catch (error) {
-      console.error('Erro ao buscar usuários:', error)
-      return []
+      console.error('Erro ao buscar usuários:', error);
+      return [];
     }
-  }
+  };
 
   return (
     <Form>
@@ -278,8 +278,8 @@ function FormDeptDigisac({ departamento, selecionar }) {
           value={selectedDepartment}
           loadOptions={loadDebounce(carregarDepartamentos)}
           onChange={(e) => {
-            setDepartmentId(e?.value)
-            setSelectedDepartment(e)
+            setDepartmentId(e?.value);
+            setSelectedDepartment(e);
           }}
           placeholder="Digite para buscar..."
           noOptionsMessage={() => 'Nenhum resultado encontrado. Digite para fazer uma pesquisa.'}
@@ -298,8 +298,8 @@ function FormDeptDigisac({ departamento, selecionar }) {
           value={selectedUser}
           loadOptions={loadDebounce(carregarUsuarios)}
           onChange={(e) => {
-            setUserId(e?.value)
-            setSelectedUser(e)
+            setUserId(e?.value);
+            setSelectedUser(e);
           }}
           placeholder="Digite para buscar..."
           noOptionsMessage={() => 'Nenhum resultado encontrado. Digite para fazer uma pesquisa.'}
@@ -344,7 +344,7 @@ function FormDeptDigisac({ departamento, selecionar }) {
         )}
       </div>
     </Form>
-  )
+  );
 }
 
-export default FormDeptDigisac
+export default FormDeptDigisac;

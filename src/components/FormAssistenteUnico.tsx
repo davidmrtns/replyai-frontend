@@ -1,85 +1,85 @@
-import { useContext, useEffect, useState } from 'react'
-import { Accordion, Button, Form } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faTrash } from '@fortawesome/free-solid-svg-icons'
-import MarkdownEditor from './MarkdownEditor'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { useContext, useEffect, useState } from 'react';
+import { Accordion, Button, Form } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy, faTrash } from '@fortawesome/free-solid-svg-icons';
+import MarkdownEditor from './MarkdownEditor';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 function FormAssistenteUnico({ assistente, selecionar }) {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [assistantId, setAssistantId] = useState('')
-  const [nome, setNome] = useState('')
-  const [proposito, setProposito] = useState('')
-  const [atalho, setAtalho] = useState('')
-  const [idVoz, setIdVoz] = useState('')
-  const [instrucoes, setInstrucoes] = useState('')
-  const [carregandoInstrucoes, setCarregandoInstrucoes] = useState(false)
-  const [carregandoPromptExemplo, setCarregandoPromptExemplo] = useState(false)
-  const [promptExemplo, setPromptExemplo] = useState('')
-  const [enviado, setEnviado] = useState(false)
-  const [excluido, setExcluido] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [assistantId, setAssistantId] = useState('');
+  const [nome, setNome] = useState('');
+  const [proposito, setProposito] = useState('');
+  const [atalho, setAtalho] = useState('');
+  const [idVoz, setIdVoz] = useState('');
+  const [instrucoes, setInstrucoes] = useState('');
+  const [carregandoInstrucoes, setCarregandoInstrucoes] = useState(false);
+  const [carregandoPromptExemplo, setCarregandoPromptExemplo] = useState(false);
+  const [promptExemplo, setPromptExemplo] = useState('');
+  const [enviado, setEnviado] = useState(false);
+  const [excluido, setExcluido] = useState(false);
 
   useEffect(() => {
     const obterInstrucoes = async () => {
-      setCarregandoInstrucoes(true)
+      setCarregandoInstrucoes(true);
 
       if (assistente?.id) {
-        var dados = await apiFetch.obterInstrucoes(empresa.slug, assistente.id)
+        var dados = await apiFetch.obterInstrucoes(empresa.slug, assistente.id);
         if (dados) {
-          setInstrucoes(dados)
+          setInstrucoes(dados);
         }
       } else {
-        setInstrucoes('')
+        setInstrucoes('');
       }
 
-      setCarregandoInstrucoes(false)
-    }
+      setCarregandoInstrucoes(false);
+    };
 
     if (assistente) {
-      setAssistantId(assistente.assistantId || '')
-      setNome(assistente.nome || '')
-      setProposito(assistente.proposito || '')
-      setAtalho(assistente.atalho || '')
-      setIdVoz(assistente.voz ? assistente.voz.id : '' || '')
+      setAssistantId(assistente.assistantId || '');
+      setNome(assistente.nome || '');
+      setProposito(assistente.proposito || '');
+      setAtalho(assistente.atalho || '');
+      setIdVoz(assistente.voz ? assistente.voz.id : '' || '');
 
-      obterInstrucoes()
+      obterInstrucoes();
     }
-  }, [assistente])
+  }, [assistente]);
 
   useEffect(() => {
     const obterExemplo = async () => {
-      setCarregandoPromptExemplo(true)
+      setCarregandoPromptExemplo(true);
 
-      var resposta = await apiFetch.obterExemploPrompt(proposito)
+      var resposta = await apiFetch.obterExemploPrompt(proposito);
       if (resposta) {
-        setPromptExemplo(resposta.prompt)
+        setPromptExemplo(resposta.prompt);
       } else {
-        setPromptExemplo('')
+        setPromptExemplo('');
       }
 
-      setCarregandoPromptExemplo(false)
-    }
+      setCarregandoPromptExemplo(false);
+    };
 
     if (proposito) {
-      obterExemplo()
+      obterExemplo();
     }
-  }, [proposito])
+  }, [proposito]);
 
   const addAssistente = (novoAssistente) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         assistentes: [...(prevEmpresa?.assistentes || []), novoAssistente],
-      }
-    })
+      };
+    });
 
-    selecionar(novoAssistente)
-  }
+    selecionar(novoAssistente);
+  };
 
   const updAssistente = (id, assistenteAtualizado) => {
     setEmpresa((prevEmpresa) => {
@@ -88,23 +88,23 @@ function FormAssistenteUnico({ assistente, selecionar }) {
         assistentes: prevEmpresa.assistentes.map((assistente) =>
           assistente.id === id ? { ...assistente, ...assistenteAtualizado } : assistente,
         ),
-      }
-    })
-  }
+      };
+    });
+  };
 
   const delAssistente = (id) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         assistentes: prevEmpresa.assistentes.filter((assistente) => assistente.id !== id),
-      }
-    })
+      };
+    });
 
-    selecionar('+')
-  }
+    selecionar('+');
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (assistente === '+') {
       var resposta = await apiFetch.adicionarAssistente(
@@ -114,13 +114,13 @@ function FormAssistenteUnico({ assistente, selecionar }) {
         proposito,
         atalho,
         idVoz,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        addAssistente(resposta)
-        alert('Assistente adicionado com sucesso')
+        resposta = await resposta.json();
+        addAssistente(resposta);
+        alert('Assistente adicionado com sucesso');
       } else {
-        alert('Ocorreu um erro')
+        alert('Ocorreu um erro');
       }
     } else {
       var resposta = await apiFetch.editarAssistente(
@@ -131,40 +131,40 @@ function FormAssistenteUnico({ assistente, selecionar }) {
         proposito,
         atalho,
         idVoz,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        updAssistente(assistente.id, resposta)
-        alert('Dados atualizados com sucesso')
+        resposta = await resposta.json();
+        updAssistente(assistente.id, resposta);
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Ocorreu um erro')
+        alert('Ocorreu um erro');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const excluir = async () => {
-    setExcluido(true)
+    setExcluido(true);
 
-    var resposta = await apiFetch.removerAssistente(empresa.slug, assistente.id)
+    var resposta = await apiFetch.removerAssistente(empresa.slug, assistente.id);
     if (resposta) {
       if (resposta.status === 200) {
-        resposta = await resposta.json()
+        resposta = await resposta.json();
         if (resposta === true) {
-          delAssistente(assistente.id)
-          alert('Assistente excluído com sucesso')
+          delAssistente(assistente.id);
+          alert('Assistente excluído com sucesso');
         } else {
-          alert('Não foi possível excluir o assistente. Tente novamente')
+          alert('Não foi possível excluir o assistente. Tente novamente');
         }
       } else if (resposta.status === 403) {
-        resposta = await resposta.json()
-        alert(resposta.detail)
+        resposta = await resposta.json();
+        alert(resposta.detail);
       }
     }
 
-    setExcluido(false)
-  }
+    setExcluido(false);
+  };
 
   return (
     <Form>
@@ -311,7 +311,7 @@ function FormAssistenteUnico({ assistente, selecionar }) {
         )}
       </div>
     </Form>
-  )
+  );
 }
 
-export default FormAssistenteUnico
+export default FormAssistenteUnico;

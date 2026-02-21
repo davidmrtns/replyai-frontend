@@ -1,74 +1,74 @@
-import { useEffect, useState } from 'react'
-import { Container, Form, Button, InputGroup } from 'react-bootstrap'
-import { useAuth } from '../contexts/AuthContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash, faUser, faTrash } from '@fortawesome/free-solid-svg-icons'
-import NavbarReplyAI from './NavbarReplyAI'
-import Card from 'react-bootstrap/Card'
-import Spinner from 'react-bootstrap/Spinner'
-import ApiFetch from '../utils/ApiFetch'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { Container, Form, Button, InputGroup } from 'react-bootstrap';
+import { useAuth } from '../contexts/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash, faUser, faTrash } from '@fortawesome/free-solid-svg-icons';
+import NavbarReplyAI from './NavbarReplyAI';
+import Card from 'react-bootstrap/Card';
+import Spinner from 'react-bootstrap/Spinner';
+import ApiFetch from '../utils/ApiFetch';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function UsuarioUnico({ novoUsuario }) {
-  const apiFetch = new ApiFetch()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { usuarioLogado } = useAuth()
-  const [idUsuario, setIdUsuario] = useState('')
-  const [nome, setNome] = useState('')
-  const [email, setEmail] = useState('')
-  const [ativo, setAtivo] = useState(false)
-  const [admin, setAdmin] = useState(false)
-  const [idEmpresa, setIdEmpresa] = useState('')
-  const [senha, setSenha] = useState('')
-  const [confirmacao, setConfirmacao] = useState('')
-  const [empresas, setEmpresas] = useState([])
-  const [enviado, setEnviado] = useState(false)
-  const [excluido, setExcluido] = useState(false)
-  const [exibirCampoSenha, setExibirCampoSenha] = useState(false)
-  const [exibirSenha, setExibirSenha] = useState(false)
+  const apiFetch = new ApiFetch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { usuarioLogado } = useAuth();
+  const [idUsuario, setIdUsuario] = useState('');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [ativo, setAtivo] = useState(false);
+  const [admin, setAdmin] = useState(false);
+  const [idEmpresa, setIdEmpresa] = useState('');
+  const [senha, setSenha] = useState('');
+  const [confirmacao, setConfirmacao] = useState('');
+  const [empresas, setEmpresas] = useState([]);
+  const [enviado, setEnviado] = useState(false);
+  const [excluido, setExcluido] = useState(false);
+  const [exibirCampoSenha, setExibirCampoSenha] = useState(false);
+  const [exibirSenha, setExibirSenha] = useState(false);
 
   useEffect(() => {
-    var dadosUsuario = location.state?.usuario
+    var dadosUsuario = location.state?.usuario;
 
     if (!dadosUsuario) {
       if (usuarioLogado && !novoUsuario) {
-        dadosUsuario = usuarioLogado
+        dadosUsuario = usuarioLogado;
       } else {
-        dadosUsuario = {}
+        dadosUsuario = {};
       }
     }
 
-    setIdUsuario(dadosUsuario.id || '')
-    setNome(dadosUsuario.nome || '')
-    setEmail(dadosUsuario.email || '')
-    setAtivo(dadosUsuario.ativo || false)
-    setAdmin(dadosUsuario.admin || false)
-    setIdEmpresa(dadosUsuario.id_empresa || '')
+    setIdUsuario(dadosUsuario.id || '');
+    setNome(dadosUsuario.nome || '');
+    setEmail(dadosUsuario.email || '');
+    setAtivo(dadosUsuario.ativo || false);
+    setAdmin(dadosUsuario.admin || false);
+    setIdEmpresa(dadosUsuario.id_empresa || '');
 
     if (novoUsuario) {
-      setExibirCampoSenha(true)
+      setExibirCampoSenha(true);
     } else {
-      setExibirCampoSenha(false)
+      setExibirCampoSenha(false);
     }
 
-    setSenha('')
-    setConfirmacao('')
-  }, [usuarioLogado, novoUsuario, location])
+    setSenha('');
+    setConfirmacao('');
+  }, [usuarioLogado, novoUsuario, location]);
 
   useEffect(() => {
     const buscarEmpresas = async () => {
-      var dados = await apiFetch.obterTodasEmpresas()
+      var dados = await apiFetch.obterTodasEmpresas();
       if (dados) {
-        setEmpresas(dados)
+        setEmpresas(dados);
       }
-    }
+    };
 
-    buscarEmpresas()
-  }, [])
+    buscarEmpresas();
+  }, []);
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (novoUsuario) {
       var resposta = await apiFetch.adicionarUsuario(
@@ -79,16 +79,16 @@ function UsuarioUnico({ novoUsuario }) {
         ativo,
         admin,
         idEmpresa,
-      )
+      );
       if (resposta) {
         if (resposta.status === 200) {
-          alert('Usuário adicionado com sucesso')
+          alert('Usuário adicionado com sucesso');
         } else {
-          resposta = await resposta.json()
-          alert(resposta.detail)
+          resposta = await resposta.json();
+          alert(resposta.detail);
         }
       } else {
-        alert('Ocorreu um erro ao adicionar o usuário. Tente novamente')
+        alert('Ocorreu um erro ao adicionar o usuário. Tente novamente');
       }
     } else {
       var resposta = await apiFetch.alterarUsuario(
@@ -100,43 +100,43 @@ function UsuarioUnico({ novoUsuario }) {
         ativo,
         admin,
         idEmpresa,
-      )
+      );
       if (resposta) {
         if (resposta.status === 200) {
-          alert('Dados atualizados com sucesso')
+          alert('Dados atualizados com sucesso');
         } else {
-          resposta = await resposta.json()
-          alert(resposta.detail)
+          resposta = await resposta.json();
+          alert(resposta.detail);
         }
       } else {
-        alert('Ocorreu um erro ao alterar os dados do usuário. Tente novamente')
+        alert('Ocorreu um erro ao alterar os dados do usuário. Tente novamente');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const excluir = async () => {
-    setExcluido(true)
+    setExcluido(true);
 
-    var resposta = await apiFetch.removerUsuario(idUsuario)
+    var resposta = await apiFetch.removerUsuario(idUsuario);
     if (resposta) {
       if (resposta.status === 200) {
-        resposta = await resposta.json()
+        resposta = await resposta.json();
         if (resposta === true) {
-          alert('Usuário excluído com sucesso')
-          navigate('/usuarios')
+          alert('Usuário excluído com sucesso');
+          navigate('/usuarios');
         } else {
-          alert('Não foi possível excluir o usuário. Tente novamente')
+          alert('Não foi possível excluir o usuário. Tente novamente');
         }
       } else if (resposta.status === 401) {
-        resposta = await resposta.json()
-        alert(resposta.detail)
+        resposta = await resposta.json();
+        alert(resposta.detail);
       }
     }
 
-    setExcluido(false)
-  }
+    setExcluido(false);
+  };
 
   return (
     <>
@@ -293,7 +293,7 @@ function UsuarioUnico({ novoUsuario }) {
         )}
       </Container>
     </>
-  )
+  );
 }
 
-export default UsuarioUnico
+export default UsuarioUnico;

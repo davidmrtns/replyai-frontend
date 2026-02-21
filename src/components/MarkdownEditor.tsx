@@ -1,23 +1,23 @@
-import { useState, useRef, useEffect } from 'react'
-import Form from 'react-bootstrap/Form'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { useState, useRef, useEffect } from 'react';
+import Form from 'react-bootstrap/Form';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const MarkdownEditor = ({ instrucoes, setInstrucoes }) => {
-  const textareaRef = useRef(null)
-  const previewRef = useRef(null)
-  const [height, setHeight] = useState('200px')
+  const textareaRef = useRef(null);
+  const previewRef = useRef(null);
+  const [height, setHeight] = useState('200px');
 
   const syncHeight = () => {
     if (textareaRef.current) {
-      const newHeight = textareaRef.current.clientHeight + 'px'
-      setHeight(newHeight)
+      const newHeight = textareaRef.current.clientHeight + 'px';
+      setHeight(newHeight);
     }
-  }
+  };
 
   useEffect(() => {
-    syncHeight()
-  }, [instrucoes])
+    syncHeight();
+  }, [instrucoes]);
 
   return (
     <div style={{ display: 'flex', gap: '20px' }}>
@@ -66,7 +66,7 @@ const MarkdownEditor = ({ instrucoes, setInstrucoes }) => {
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{instrucoes}</ReactMarkdown>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MarkdownEditor
+export default MarkdownEditor;

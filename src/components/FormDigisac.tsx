@@ -1,48 +1,48 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import Accordion from 'react-bootstrap/Accordion'
-import FormDeptDigisac from './FormDeptDigisac'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import AsyncSelect from 'react-select/async'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import FormDeptDigisac from './FormDeptDigisac';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import AsyncSelect from 'react-select/async';
 
 function FormDigisac() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [debounceTimeout, setDebounceTimeout] = useState(null)
-  const [digisacClient, setDigisacClient] = useState('')
-  const [departamentos, setDepartamentos] = useState('')
-  const [deptSelecionado, setDeptSelecionado] = useState(null)
-  const [slugDigisac, setSlugDigisac] = useState('')
-  const [tokenDigisac, setTokenDigisac] = useState('')
-  const [defaultUserId, setDefaultUserId] = useState('')
-  const [serviceId, setServiceId] = useState('')
-  const [selectedService, setSelectedService] = useState(null)
-  const [selectedDefaultUser, setSelectedDefaultUser] = useState(null)
-  const [enviado, setEnviado] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
+  const [digisacClient, setDigisacClient] = useState('');
+  const [departamentos, setDepartamentos] = useState('');
+  const [deptSelecionado, setDeptSelecionado] = useState(null);
+  const [slugDigisac, setSlugDigisac] = useState('');
+  const [tokenDigisac, setTokenDigisac] = useState('');
+  const [defaultUserId, setDefaultUserId] = useState('');
+  const [serviceId, setServiceId] = useState('');
+  const [selectedService, setSelectedService] = useState(null);
+  const [selectedDefaultUser, setSelectedDefaultUser] = useState(null);
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setDigisacClient(empresa.digisac_client[0])
+      setDigisacClient(empresa.digisac_client[0]);
     }
-  }, [empresa])
+  }, [empresa]);
 
   useEffect(() => {
     if (digisacClient) {
-      setSlugDigisac(digisacClient.digisacSlug)
-      setTokenDigisac(digisacClient.digisacToken)
-      setDefaultUserId(digisacClient.digisacDefaultUser)
-      setServiceId(digisacClient.service_id)
-      setDepartamentos(digisacClient.departamentos)
-      carregarServicoInicial(digisacClient.service_id)
-      carregarUsuarioPadraoInicial(digisacClient.digisacDefaultUser)
+      setSlugDigisac(digisacClient.digisacSlug);
+      setTokenDigisac(digisacClient.digisacToken);
+      setDefaultUserId(digisacClient.digisacDefaultUser);
+      setServiceId(digisacClient.service_id);
+      setDepartamentos(digisacClient.departamentos);
+      carregarServicoInicial(digisacClient.service_id);
+      carregarUsuarioPadraoInicial(digisacClient.digisacDefaultUser);
     }
-  }, [digisacClient])
+  }, [digisacClient]);
 
   const enviar = async () => {
-    setEnviado(true)
-    var resposta = null
+    setEnviado(true);
+    var resposta = null;
 
     if (digisacClient) {
       resposta = await apiFetch.editarInformacoesDigisac(
@@ -51,134 +51,134 @@ function FormDigisac() {
         tokenDigisac,
         defaultUserId,
         serviceId,
-      )
+      );
     } else {
-      resposta = await apiFetch.adicionarClienteDigisac(empresa.slug, slugDigisac, tokenDigisac)
+      resposta = await apiFetch.adicionarClienteDigisac(empresa.slug, slugDigisac, tokenDigisac);
     }
 
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       setEmpresa((prevEmpresa) => {
         return {
           ...prevEmpresa,
           digisac_client: [resposta],
-        }
-      })
+        };
+      });
 
       if (digisacClient) {
-        alert('Dados atualizados com sucesso')
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Conexão com Digisac criada com sucesso')
+        alert('Conexão com Digisac criada com sucesso');
       }
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const alterarDeptSelecionado = (id) => {
     if (id === '+') {
-      setDeptSelecionado('+')
+      setDeptSelecionado('+');
     } else {
-      var departamento = departamentos.find((dpt) => dpt.id === parseInt(id))
-      setDeptSelecionado(departamento)
+      var departamento = departamentos.find((dpt) => dpt.id === parseInt(id));
+      setDeptSelecionado(departamento);
     }
-  }
+  };
 
   const loadDebounce = (carregar) => (input, callback) => {
     if (debounceTimeout) {
-      clearTimeout(debounceTimeout)
+      clearTimeout(debounceTimeout);
     }
     const timeout = setTimeout(async () => {
-      const options = await carregar(input)
-      callback(options)
-    }, 500)
+      const options = await carregar(input);
+      callback(options);
+    }, 500);
 
-    setDebounceTimeout(timeout)
-  }
+    setDebounceTimeout(timeout);
+  };
 
   const carregarServicoInicial = async (id) => {
-    if (!id) return
+    if (!id) return;
 
     try {
-      var dados = await apiFetch.listarServicosDigisac(empresa.slug, 1, '', id)
+      var dados = await apiFetch.listarServicosDigisac(empresa.slug, 1, '', id);
       if (dados) {
-        var servico = dados.data[0]
+        var servico = dados.data[0];
 
         setSelectedService({
           value: servico.id,
           label: servico.name,
-        })
+        });
       }
     } catch (error) {
-      console.error('Erro ao buscar serviços:', error)
+      console.error('Erro ao buscar serviços:', error);
     }
-  }
+  };
 
   const carregarUsuarioPadraoInicial = async (id) => {
-    if (!id) return
+    if (!id) return;
 
     try {
-      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, '', id)
+      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, '', id);
       if (dados) {
-        var servico = dados.data[0]
+        var servico = dados.data[0];
 
         setSelectedDefaultUser({
           value: servico.id,
           label: servico.name,
-        })
+        });
       }
     } catch (error) {
-      console.error('Erro ao buscar usuários:', error)
+      console.error('Erro ao buscar usuários:', error);
     }
-  }
+  };
 
   const carregarServicos = async (input) => {
     if (input.length < 1) {
-      return []
+      return [];
     }
 
     try {
-      var dados = await apiFetch.listarServicosDigisac(empresa.slug, 1, input, '')
+      var dados = await apiFetch.listarServicosDigisac(empresa.slug, 1, input, '');
       if (dados) {
         const opcoesFormatadas = dados.data.map((servico) => ({
           value: servico.id,
           label: servico.name,
-        }))
+        }));
 
-        return opcoesFormatadas
+        return opcoesFormatadas;
       } else {
-        return []
+        return [];
       }
     } catch (error) {
-      console.error('Erro ao buscar serviços:', error)
-      return []
+      console.error('Erro ao buscar serviços:', error);
+      return [];
     }
-  }
+  };
 
   const carregarUsuarios = async (input) => {
     if (input.length < 1) {
-      return []
+      return [];
     }
 
     try {
-      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, input, '')
+      var dados = await apiFetch.listarUsuariosDigisac(empresa.slug, 1, input, '');
       if (dados) {
         const opcoesFormatadas = dados.data.map((usuario) => ({
           value: usuario.id,
           label: usuario.name,
-        }))
+        }));
 
-        return opcoesFormatadas
+        return opcoesFormatadas;
       } else {
-        return []
+        return [];
       }
     } catch (error) {
-      console.error('Erro ao buscar serviços:', error)
-      return []
+      console.error('Erro ao buscar serviços:', error);
+      return [];
     }
-  }
+  };
 
   return (
     <>
@@ -222,8 +222,8 @@ function FormDigisac() {
                 value={selectedDefaultUser}
                 loadOptions={loadDebounce(carregarUsuarios)}
                 onChange={(e) => {
-                  setDefaultUserId(e?.value)
-                  setSelectedDefaultUser(e)
+                  setDefaultUserId(e?.value);
+                  setSelectedDefaultUser(e);
                 }}
                 placeholder="Digite para buscar..."
                 noOptionsMessage={() =>
@@ -240,8 +240,8 @@ function FormDigisac() {
                 value={selectedService}
                 loadOptions={loadDebounce(carregarServicos)}
                 onChange={(e) => {
-                  setServiceId(e?.value)
-                  setSelectedService(e)
+                  setServiceId(e?.value);
+                  setSelectedService(e);
                 }}
                 placeholder="Digite para buscar..."
                 noOptionsMessage={() =>
@@ -300,7 +300,7 @@ function FormDigisac() {
         </Button>
       </Form>
     </>
-  )
+  );
 }
 
-export default FormDigisac
+export default FormDigisac;

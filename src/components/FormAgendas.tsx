@@ -1,40 +1,40 @@
-import { useEffect, useState, useContext } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import Accordion from 'react-bootstrap/Accordion'
-import FormOutlook from './FormOutlook'
-import FormGoogleCalendar from './FormGoogleCalendar'
-import FormAgendaUnica from './FormAgendaUnica'
-import Spinner from 'react-bootstrap/Spinner'
-import ApiFetch from '../utils/ApiFetch'
-import { EmpresaContext } from '../contexts/EmpresaContext'
+import { useEffect, useState, useContext } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import FormOutlook from './FormOutlook';
+import FormGoogleCalendar from './FormGoogleCalendar';
+import FormAgendaUnica from './FormAgendaUnica';
+import Spinner from 'react-bootstrap/Spinner';
+import ApiFetch from '../utils/ApiFetch';
+import { EmpresaContext } from '../contexts/EmpresaContext';
 
 function FormAgenda() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [agendas, setAgendas] = useState([])
-  const [agendaSelecionada, setAgendaSelecionada] = useState(null)
-  const [tipoAgendaClient, setTipoAgendaClient] = useState('')
-  const [tipoCancelamento, setTipoCancelamento] = useState('')
-  const [ativarConfirmacao, setAtivarConfirmacao] = useState(false)
-  const [duracaoEvento, setDuracaoEvento] = useState(0)
-  const [horaInicioAgenda, setHoraInicioAgenda] = useState('')
-  const [horaFinalAgenda, setHoraFinalAgenda] = useState('')
-  const [enviado, setEnviado] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [agendas, setAgendas] = useState([]);
+  const [agendaSelecionada, setAgendaSelecionada] = useState(null);
+  const [tipoAgendaClient, setTipoAgendaClient] = useState('');
+  const [tipoCancelamento, setTipoCancelamento] = useState('');
+  const [ativarConfirmacao, setAtivarConfirmacao] = useState(false);
+  const [duracaoEvento, setDuracaoEvento] = useState(0);
+  const [horaInicioAgenda, setHoraInicioAgenda] = useState('');
+  const [horaFinalAgenda, setHoraFinalAgenda] = useState('');
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setTipoAgendaClient(empresa.agenda_client_type || '')
-      setTipoCancelamento(empresa.tipo_cancelamento_evento || '')
-      setAtivarConfirmacao(empresa.confirmar_agendamentos_ativo || false)
-      setDuracaoEvento(empresa.duracao_evento || 0)
-      setHoraInicioAgenda(empresa.hora_inicio_agenda || '')
-      setHoraFinalAgenda(empresa.hora_final_agenda || '')
-      setAgendas(empresa.agenda || [])
+      setTipoAgendaClient(empresa.agenda_client_type || '');
+      setTipoCancelamento(empresa.tipo_cancelamento_evento || '');
+      setAtivarConfirmacao(empresa.confirmar_agendamentos_ativo || false);
+      setDuracaoEvento(empresa.duracao_evento || 0);
+      setHoraInicioAgenda(empresa.hora_inicio_agenda || '');
+      setHoraFinalAgenda(empresa.hora_final_agenda || '');
+      setAgendas(empresa.agenda || []);
     }
-  }, [empresa])
+  }, [empresa]);
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     var resposta = await apiFetch.editarInformacoesAgenda(
       empresa.slug,
@@ -44,26 +44,26 @@ function FormAgenda() {
       duracaoEvento,
       horaInicioAgenda,
       horaFinalAgenda,
-    )
+    );
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
-      setEmpresa(resposta)
-      alert('Dados atualizados com sucesso')
+      resposta = await resposta.json();
+      setEmpresa(resposta);
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const alterarAgendaSelecionada = (id) => {
     if (id === '+') {
-      setAgendaSelecionada('+')
+      setAgendaSelecionada('+');
     } else {
-      var agenda = agendas.find((ag) => ag.id === parseInt(id))
-      setAgendaSelecionada(agenda)
+      var agenda = agendas.find((ag) => ag.id === parseInt(id));
+      setAgendaSelecionada(agenda);
     }
-  }
+  };
 
   return (
     <Form>
@@ -190,7 +190,7 @@ function FormAgenda() {
         )}
       </Button>
     </Form>
-  )
+  );
 }
 
-export default FormAgenda
+export default FormAgenda;

@@ -1,31 +1,31 @@
-import { useEffect, useState, useContext } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import FormAsaas from './FormAsaas'
-import Accordion from 'react-bootstrap/Accordion'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
+import { useEffect, useState, useContext } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import FormAsaas from './FormAsaas';
+import Accordion from 'react-bootstrap/Accordion';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
 
 function FormFinanceiro() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [tipoFinancialClient, setTipoFinancialClient] = useState('')
-  const [lembrarVencimento, setLembrarVencimento] = useState(false)
-  const [enviarBoletoVencimentos, setEnviarBoletoVencimentos] = useState(false)
-  const [cobrarInadimplentes, setCobrarInadimplentes] = useState(false)
-  const [enviado, setEnviado] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [tipoFinancialClient, setTipoFinancialClient] = useState('');
+  const [lembrarVencimento, setLembrarVencimento] = useState(false);
+  const [enviarBoletoVencimentos, setEnviarBoletoVencimentos] = useState(false);
+  const [cobrarInadimplentes, setCobrarInadimplentes] = useState(false);
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setTipoFinancialClient(empresa.financial_client_type || '')
-      setLembrarVencimento(empresa.lembrar_vencimentos_ativo || false)
-      setEnviarBoletoVencimentos(empresa.enviar_boleto_lembrar_vencimento || false)
-      setCobrarInadimplentes(empresa.cobrar_inadimplentes_ativo || false)
+      setTipoFinancialClient(empresa.financial_client_type || '');
+      setLembrarVencimento(empresa.lembrar_vencimentos_ativo || false);
+      setEnviarBoletoVencimentos(empresa.enviar_boleto_lembrar_vencimento || false);
+      setCobrarInadimplentes(empresa.cobrar_inadimplentes_ativo || false);
     }
-  }, [empresa])
+  }, [empresa]);
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     var resposta = await apiFetch.editarInformacoesFinanceiras(
       empresa.slug,
@@ -33,17 +33,17 @@ function FormFinanceiro() {
       lembrarVencimento,
       enviarBoletoVencimentos,
       cobrarInadimplentes,
-    )
+    );
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
-      setEmpresa(resposta)
-      alert('Dados atualizados com sucesso')
+      resposta = await resposta.json();
+      setEmpresa(resposta);
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   return (
     <Form>
@@ -107,7 +107,7 @@ function FormFinanceiro() {
         )}
       </Button>
     </Form>
-  )
+  );
 }
 
-export default FormFinanceiro
+export default FormFinanceiro;

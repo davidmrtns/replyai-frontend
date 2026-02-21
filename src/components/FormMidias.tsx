@@ -1,29 +1,29 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import Accordion from 'react-bootstrap/Accordion'
-import ApiFetch from '../utils/ApiFetch'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import FormMidiaUnica from './FormMidiaUnica'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import ApiFetch from '../utils/ApiFetch';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import FormMidiaUnica from './FormMidiaUnica';
 
 function FormMidias() {
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [midiaSelecionada, setMidiaSelecionada] = useState('')
-  const [midias, setMidias] = useState([])
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [midiaSelecionada, setMidiaSelecionada] = useState('');
+  const [midias, setMidias] = useState([]);
 
   useEffect(() => {
     if (empresa) {
-      setMidias(empresa.midias || [])
+      setMidias(empresa.midias || []);
     }
-  }, [empresa])
+  }, [empresa]);
 
   const alterarMidiaSelecionada = (id) => {
     if (id === '+') {
-      setMidiaSelecionada('+')
+      setMidiaSelecionada('+');
     } else {
-      var midia = midias.find((mid) => mid.id === parseInt(id))
-      setMidiaSelecionada(midia)
+      var midia = midias.find((mid) => mid.id === parseInt(id));
+      setMidiaSelecionada(midia);
     }
-  }
+  };
 
   return (
     <Form>
@@ -61,7 +61,7 @@ function FormMidias() {
         ''
       )}
     </Form>
-  )
+  );
 }
 
-export default FormMidias
+export default FormMidias;

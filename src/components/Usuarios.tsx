@@ -1,49 +1,49 @@
-import { Container, Row, Col } from 'react-bootstrap'
-import { Form } from 'react-bootstrap'
-import NavbarReplyAI from './NavbarReplyAI'
-import Spinner from 'react-bootstrap/Spinner'
-import { useEffect, useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import ApiFetch from '../utils/ApiFetch'
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Container, Row, Col } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import NavbarReplyAI from './NavbarReplyAI';
+import Spinner from 'react-bootstrap/Spinner';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import ApiFetch from '../utils/ApiFetch';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronLeft,
   faChevronRight,
   faRotateLeft,
   faUserTie,
-} from '@fortawesome/free-solid-svg-icons'
-import { useNavigate } from 'react-router-dom'
+} from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 function Usuarios() {
-  const apiFetch = new ApiFetch()
-  const navigate = useNavigate()
-  const { usuarioLogado } = useAuth()
-  const [usuarios, setUsuarios] = useState({})
-  const [carregando, setCarregando] = useState(true)
-  const [limite, setLimite] = useState(10)
-  const [cursor, setCursor] = useState(0)
+  const apiFetch = new ApiFetch();
+  const navigate = useNavigate();
+  const { usuarioLogado } = useAuth();
+  const [usuarios, setUsuarios] = useState({});
+  const [carregando, setCarregando] = useState(true);
+  const [limite, setLimite] = useState(10);
+  const [cursor, setCursor] = useState(0);
 
   useEffect(() => {
-    setCarregando(true)
+    setCarregando(true);
 
     const buscarUsuarios = async () => {
-      var resposta = await apiFetch.listarUsuarios(cursor, limite)
+      var resposta = await apiFetch.listarUsuarios(cursor, limite);
       if (resposta.status === 200) {
-        resposta = await resposta.json()
-        setUsuarios(resposta)
+        resposta = await resposta.json();
+        setUsuarios(resposta);
       }
 
-      setCarregando(false)
-    }
+      setCarregando(false);
+    };
 
-    buscarUsuarios()
-  }, [cursor, limite])
+    buscarUsuarios();
+  }, [cursor, limite]);
 
   const acessarUsuario = (usuario) => {
-    navigate(`/usuario`, { state: { usuario } })
-  }
+    navigate(`/usuario`, { state: { usuario } });
+  };
 
   return (
     <>
@@ -113,7 +113,7 @@ function Usuarios() {
         )}
       </Container>
     </>
-  )
+  );
 }
 
-export default Usuarios
+export default Usuarios;

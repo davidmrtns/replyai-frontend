@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Card, Form } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Card, Form } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleCheck,
   faCircleXmark,
@@ -14,89 +14,89 @@ import {
   faRotateRight,
   faSpinner,
   faUser,
-} from '@fortawesome/free-solid-svg-icons'
-import { faWhatsapp } from '@fortawesome/free-brands-svg-icons'
-import imagemSemConexao from '../replyai-no-connection.png'
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import imagemSemConexao from '../replyai-no-connection.png';
 
 function FormEvolution() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [evolutionAPIClient, setEvolutionAPIClient] = useState('')
-  const [apiKey, setApiKey] = useState('')
-  const [instanceName, setInstanceName] = useState('')
-  const [instancia, setInstancia] = useState(null)
-  const [qrCode, setQrCode] = useState('')
-  const [webhook, setWebhook] = useState('')
-  const [webhookInstancia, setWebhookInstancia] = useState('')
-  const [carregandoInstancia, setCarregandoInstancia] = useState(false)
-  const [carregandoWebhook, setCarregandoWebhook] = useState(false)
-  const [enviado, setEnviado] = useState(false)
-  const [mensagem, setMensagem] = useState('Carregando instância')
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [evolutionAPIClient, setEvolutionAPIClient] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [instanceName, setInstanceName] = useState('');
+  const [instancia, setInstancia] = useState(null);
+  const [qrCode, setQrCode] = useState('');
+  const [webhook, setWebhook] = useState('');
+  const [webhookInstancia, setWebhookInstancia] = useState('');
+  const [carregandoInstancia, setCarregandoInstancia] = useState(false);
+  const [carregandoWebhook, setCarregandoWebhook] = useState(false);
+  const [enviado, setEnviado] = useState(false);
+  const [mensagem, setMensagem] = useState('Carregando instância');
 
   useEffect(() => {
     if (empresa) {
-      setEvolutionAPIClient(empresa.evolutionapi_client[0])
-      setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`)
+      setEvolutionAPIClient(empresa.evolutionapi_client[0]);
+      setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`);
     }
-  }, [empresa])
+  }, [empresa]);
 
   useEffect(() => {
     if (evolutionAPIClient) {
-      setApiKey(evolutionAPIClient.apiKey)
-      setInstanceName(evolutionAPIClient.instanceName)
+      setApiKey(evolutionAPIClient.apiKey);
+      setInstanceName(evolutionAPIClient.instanceName);
     }
-  }, [evolutionAPIClient])
+  }, [evolutionAPIClient]);
 
   useEffect(() => {
     const obterInstancia = async () => {
-      setCarregandoInstancia(true)
-      await carregarInstancia()
-      setCarregandoInstancia(false)
-    }
+      setCarregandoInstancia(true);
+      await carregarInstancia();
+      setCarregandoInstancia(false);
+    };
 
-    obterInstancia()
-  }, [apiKey])
+    obterInstancia();
+  }, [apiKey]);
 
   useEffect(() => {
     const obterWebhookInstancia = async () => {
-      setCarregandoWebhook(true)
+      setCarregandoWebhook(true);
 
       if (apiKey !== '') {
-        var dados = await apiFetch.listarWebhooksEvolutionAPI(empresa.slug, apiKey)
+        var dados = await apiFetch.listarWebhooksEvolutionAPI(empresa.slug, apiKey);
         if (dados) {
-          setWebhookInstancia(dados.url)
+          setWebhookInstancia(dados.url);
         }
       }
 
-      setCarregandoWebhook(false)
-    }
+      setCarregandoWebhook(false);
+    };
 
-    obterWebhookInstancia()
-  }, [instancia])
+    obterWebhookInstancia();
+  }, [instancia]);
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
-    var resposta = await apiFetch.adicionarClienteEvolutionAPI(empresa.slug, instanceName)
+    var resposta = await apiFetch.adicionarClienteEvolutionAPI(empresa.slug, instanceName);
 
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       setEmpresa((prevEmpresa) => {
         return {
           ...prevEmpresa,
           evolutionapi_client: [resposta],
-        }
-      })
-      alert('Dados atualizados com sucesso')
+        };
+      });
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const definirWebhook = async (habilitado) => {
-    setCarregandoWebhook(true)
+    setCarregandoWebhook(true);
 
     if (apiKey !== '' && webhook !== '') {
       var dados = await apiFetch.adicionarWebhookEvolutionAPI(
@@ -104,67 +104,67 @@ function FormEvolution() {
         apiKey,
         webhook,
         habilitado,
-      )
+      );
       if (dados) {
-        setWebhookInstancia(dados?.webhook?.webhook?.url)
+        setWebhookInstancia(dados?.webhook?.webhook?.url);
       }
     }
 
-    setCarregandoWebhook(false)
-  }
+    setCarregandoWebhook(false);
+  };
 
   const carregarInstancia = async () => {
     if (apiKey !== '') {
-      var dados = await apiFetch.obterInstanciaEvolution(empresa.slug, apiKey)
+      var dados = await apiFetch.obterInstanciaEvolution(empresa.slug, apiKey);
       if (dados) {
-        setInstancia(dados[0])
+        setInstancia(dados[0]);
       }
     }
 
-    setQrCode('')
-  }
+    setQrCode('');
+  };
 
   const recarregarInstancia = async () => {
-    setMensagem('Carregando instância')
-    setCarregandoInstancia(true)
-    await carregarInstancia()
-    setCarregandoInstancia(false)
-  }
+    setMensagem('Carregando instância');
+    setCarregandoInstancia(true);
+    await carregarInstancia();
+    setCarregandoInstancia(false);
+  };
 
   const reiniciarInstancia = async () => {
-    setMensagem('Reiniciando instância')
-    setCarregandoInstancia(true)
+    setMensagem('Reiniciando instância');
+    setCarregandoInstancia(true);
 
     if (apiKey !== '') {
-      await apiFetch.reiniciarInstanciaEvolution(empresa.slug, apiKey)
-      await carregarInstancia()
+      await apiFetch.reiniciarInstanciaEvolution(empresa.slug, apiKey);
+      await carregarInstancia();
     }
 
-    setCarregandoInstancia(false)
-  }
+    setCarregandoInstancia(false);
+  };
 
   const ligarDesligarInstancia = async () => {
-    setCarregandoInstancia(true)
+    setCarregandoInstancia(true);
 
     if (instancia) {
       if (instancia.instance.status === 'open') {
-        setMensagem('Desligando instância')
-        await apiFetch.desligarInstanciaEvolution(empresa.slug, apiKey)
-        await carregarInstancia()
+        setMensagem('Desligando instância');
+        await apiFetch.desligarInstanciaEvolution(empresa.slug, apiKey);
+        await carregarInstancia();
       } else if (
         instancia.instance.status === 'close' ||
         instancia.instance.status === 'connecting'
       ) {
-        setMensagem('Gerando QR Code')
-        var dados = await apiFetch.conectarInstanciaEvolution(empresa.slug, apiKey)
+        setMensagem('Gerando QR Code');
+        var dados = await apiFetch.conectarInstanciaEvolution(empresa.slug, apiKey);
         if (dados) {
-          setQrCode(dados.base64)
+          setQrCode(dados.base64);
         }
       }
     }
 
-    setCarregandoInstancia(false)
-  }
+    setCarregandoInstancia(false);
+  };
 
   return (
     <>
@@ -291,7 +291,7 @@ function FormEvolution() {
         </p>
       )}
     </>
-  )
+  );
 }
 
-export default FormEvolution
+export default FormEvolution;

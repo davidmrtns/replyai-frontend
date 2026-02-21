@@ -1,10 +1,10 @@
-import { Component } from 'react'
-import AppRoutes from './AppRoutes'
+import { Component } from 'react';
+import AppRoutes from './AppRoutes';
 
 export default class App extends Component {
-  static displayName = App.name
+  static displayName = App.name;
 
   render() {
-    return <AppRoutes />
+    return <AppRoutes />;
   }
 }

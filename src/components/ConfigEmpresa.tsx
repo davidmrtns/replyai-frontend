@@ -1,66 +1,66 @@
-import { Container } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import Card from 'react-bootstrap/Card'
-import Nav from 'react-bootstrap/Nav'
-import FormInformacoesEmpresa from './FormInformacoesEmpresa'
-import FormAssistentes from './FormAssistentes'
-import FormMensagens from './FormMensagens'
-import FormAgendas from './FormAgendas'
-import FormCRM from './FormCRM'
-import FormFinanceiro from './FormFinanceiro'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import NavbarReplyAI from './NavbarReplyAI'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBuilding } from '@fortawesome/free-solid-svg-icons'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import FormColaboradores from './FormColaboradores'
-import FormMidias from './FormMidias'
+import { Container } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import Card from 'react-bootstrap/Card';
+import Nav from 'react-bootstrap/Nav';
+import FormInformacoesEmpresa from './FormInformacoesEmpresa';
+import FormAssistentes from './FormAssistentes';
+import FormMensagens from './FormMensagens';
+import FormAgendas from './FormAgendas';
+import FormCRM from './FormCRM';
+import FormFinanceiro from './FormFinanceiro';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import NavbarReplyAI from './NavbarReplyAI';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import FormColaboradores from './FormColaboradores';
+import FormMidias from './FormMidias';
 
 function ConfigEmpresa() {
-  var { slug } = useParams()
-  const apiFetch = new ApiFetch()
-  const [carregando, setCarregando] = useState(true)
-  const [tabAtiva, setTabAtiva] = useState('informacoesBasicas')
-  const [empresa, setEmpresa] = useState(null)
+  var { slug } = useParams();
+  const apiFetch = new ApiFetch();
+  const [carregando, setCarregando] = useState(true);
+  const [tabAtiva, setTabAtiva] = useState('informacoesBasicas');
+  const [empresa, setEmpresa] = useState(null);
 
   useEffect(() => {
     const buscarEmpresa = async () => {
-      var resposta = await apiFetch.obterEmpresa(slug)
+      var resposta = await apiFetch.obterEmpresa(slug);
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        setEmpresa(resposta)
+        resposta = await resposta.json();
+        setEmpresa(resposta);
       }
 
-      setCarregando(false)
-    }
+      setCarregando(false);
+    };
 
-    buscarEmpresa()
-  }, [slug])
+    buscarEmpresa();
+  }, [slug]);
 
   const renderizarConteudo = () => {
     switch (tabAtiva) {
       case 'informacoesBasicas':
-        return <FormInformacoesEmpresa novaEmpresa={false} />
+        return <FormInformacoesEmpresa novaEmpresa={false} />;
       case 'colaboradores':
-        return <FormColaboradores />
+        return <FormColaboradores />;
       case 'midias':
-        return <FormMidias />
+        return <FormMidias />;
       case 'assistentes':
-        return <FormAssistentes />
+        return <FormAssistentes />;
       case 'mensagens':
-        return <FormMensagens />
+        return <FormMensagens />;
       case 'agenda':
-        return <FormAgendas />
+        return <FormAgendas />;
       case 'crm':
-        return <FormCRM />
+        return <FormCRM />;
       case 'financeiro':
-        return <FormFinanceiro />
+        return <FormFinanceiro />;
       default:
-        return <FormInformacoesEmpresa novaEmpresa={false} />
+        return <FormInformacoesEmpresa novaEmpresa={false} />;
     }
-  }
+  };
 
   return (
     <>
@@ -124,7 +124,7 @@ function ConfigEmpresa() {
         </Container>
       )}
     </>
-  )
+  );
 }
 
-export default ConfigEmpresa
+export default ConfigEmpresa;

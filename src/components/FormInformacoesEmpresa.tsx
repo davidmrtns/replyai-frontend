@@ -1,64 +1,64 @@
-import { Form, Button, InputGroup } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-import { useContext, useEffect, useState } from 'react'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { useNavigate } from 'react-router-dom'
+import { Form, Button, InputGroup } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { useContext, useEffect, useState } from 'react';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { useNavigate } from 'react-router-dom';
 
 function FormInformacoesEmpresa({ novaEmpresa }) {
-  const apiFetch = new ApiFetch()
-  const navigate = useNavigate()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [nome, setNome] = useState('')
-  const [slug, setSlug] = useState('')
-  const [token, setToken] = useState('')
-  const [fusoHorario, setFusoHorario] = useState('')
-  const [empresaAtiva, setEmpresaAtiva] = useState(false)
-  const [webhook, setWebhook] = useState('')
-  const [openaiApiKey, setOpenaiApiKey] = useState('')
-  const [elevenLabsApiKey, setElevenLabsApiKey] = useState('')
-  const [timezones, setTimezones] = useState([])
-  const [enviado, setEnviado] = useState(false)
-  const [exibirOpenAIKey, setExibirOpenAIKey] = useState(false)
-  const [exibirElevenLabsKey, setExibirElevenLabsKey] = useState(false)
+  const apiFetch = new ApiFetch();
+  const navigate = useNavigate();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [nome, setNome] = useState('');
+  const [slug, setSlug] = useState('');
+  const [token, setToken] = useState('');
+  const [fusoHorario, setFusoHorario] = useState('');
+  const [empresaAtiva, setEmpresaAtiva] = useState(false);
+  const [webhook, setWebhook] = useState('');
+  const [openaiApiKey, setOpenaiApiKey] = useState('');
+  const [elevenLabsApiKey, setElevenLabsApiKey] = useState('');
+  const [timezones, setTimezones] = useState([]);
+  const [enviado, setEnviado] = useState(false);
+  const [exibirOpenAIKey, setExibirOpenAIKey] = useState(false);
+  const [exibirElevenLabsKey, setExibirElevenLabsKey] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setNome(empresa.nome || '')
-      setSlug(empresa.slug || '')
-      setToken(empresa.token || '')
-      setOpenaiApiKey(empresa.openai_api_key || '')
-      setElevenLabsApiKey(empresa.elevenlabs_api_key || '')
-      setEmpresaAtiva(empresa.empresa_ativa || false)
-      setFusoHorario(empresa.fuso_horario || '')
-      setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`)
+      setNome(empresa.nome || '');
+      setSlug(empresa.slug || '');
+      setToken(empresa.token || '');
+      setOpenaiApiKey(empresa.openai_api_key || '');
+      setElevenLabsApiKey(empresa.elevenlabs_api_key || '');
+      setEmpresaAtiva(empresa.empresa_ativa || false);
+      setFusoHorario(empresa.fuso_horario || '');
+      setWebhook(`${apiFetch.urlBase}/resposta/${empresa.slug}/${empresa.token}`);
     }
 
-    listarFusos()
-  }, [empresa])
+    listarFusos();
+  }, [empresa]);
 
   const listarFusos = async () => {
-    var dados = await apiFetch.listarFusosPytz()
+    var dados = await apiFetch.listarFusosPytz();
     if (dados) {
-      setTimezones(dados.timezones)
+      setTimezones(dados.timezones);
     } else {
-      setTimezones([])
+      setTimezones([]);
     }
-  }
+  };
 
   const copiarTexto = async (texto) => {
     try {
-      await navigator.clipboard.writeText(texto)
-      alert('Informação copiada com sucesso!')
+      await navigator.clipboard.writeText(texto);
+      alert('Informação copiada com sucesso!');
     } catch {
-      alert('Opa, não foi possível copiar essa informação...')
+      alert('Opa, não foi possível copiar essa informação...');
     }
-  }
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (!novaEmpresa) {
       var resposta = await apiFetch.editarInformacoesBasicas(
@@ -68,13 +68,13 @@ function FormInformacoesEmpresa({ novaEmpresa }) {
         empresaAtiva,
         openaiApiKey,
         elevenLabsApiKey,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        setEmpresa(resposta)
-        alert('Dados atualizados com sucesso')
+        resposta = await resposta.json();
+        setEmpresa(resposta);
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Ocorreu um erro')
+        alert('Ocorreu um erro');
       }
     } else {
       var resposta = await apiFetch.adicionarEmpresa(
@@ -84,18 +84,18 @@ function FormInformacoesEmpresa({ novaEmpresa }) {
         empresaAtiva,
         openaiApiKey,
         elevenLabsApiKey,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        alert('Empresa adicionada com sucesso')
-        navigate('/empresas')
+        resposta = await resposta.json();
+        alert('Empresa adicionada com sucesso');
+        navigate('/empresas');
       } else {
-        alert('Ocorreu um erro ao adicionar a empresa. Tente novamente')
+        alert('Ocorreu um erro ao adicionar a empresa. Tente novamente');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   return (
     <Form>
@@ -219,7 +219,7 @@ function FormInformacoesEmpresa({ novaEmpresa }) {
         )}
       </Button>
     </Form>
-  )
+  );
 }
 
-export default FormInformacoesEmpresa
+export default FormInformacoesEmpresa;

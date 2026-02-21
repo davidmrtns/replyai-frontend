@@ -1,35 +1,35 @@
-import { useEffect, useState } from 'react'
-import ApiFetch from '../utils/ApiFetch'
-import NavbarReplyAI from './NavbarReplyAI'
-import { Container } from 'react-bootstrap'
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
-import { useNavigate } from 'react-router-dom'
-import { Row, Col } from 'react-bootstrap'
-import Spinner from 'react-bootstrap/Spinner'
+import { useEffect, useState } from 'react';
+import ApiFetch from '../utils/ApiFetch';
+import NavbarReplyAI from './NavbarReplyAI';
+import { Container } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
+import { Row, Col } from 'react-bootstrap';
+import Spinner from 'react-bootstrap/Spinner';
 
 function Empresas() {
-  const apiFetch = new ApiFetch()
-  const navigate = useNavigate()
-  const [empresas, setEmpresas] = useState([])
-  const [carregando, setCarregando] = useState(true)
+  const apiFetch = new ApiFetch();
+  const navigate = useNavigate();
+  const [empresas, setEmpresas] = useState([]);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     const buscarEmpresas = async () => {
-      var dados = await apiFetch.obterTodasEmpresas()
+      var dados = await apiFetch.obterTodasEmpresas();
       if (dados) {
-        setEmpresas(dados)
+        setEmpresas(dados);
       }
 
-      setCarregando(false)
-    }
+      setCarregando(false);
+    };
 
-    buscarEmpresas()
-  }, [])
+    buscarEmpresas();
+  }, []);
 
   const acessarEmpresa = (slug) => {
-    navigate(slug)
-  }
+    navigate(slug);
+  };
 
   return (
     <>
@@ -70,7 +70,7 @@ function Empresas() {
         )}
       </Container>
     </>
-  )
+  );
 }
 
-export default Empresas
+export default Empresas;

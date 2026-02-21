@@ -1,17 +1,17 @@
-import { Route, Routes, Navigate } from 'react-router-dom'
-import Login from './components/Login'
-import ConfigEmpresa from './components/ConfigEmpresa'
-import RotaPrivada from './components/RotaPrivada'
-import Empresas from './components/Empresas'
-import NovaEmpresa from './components/NovaEmpresa'
-import UsuarioUnico from './components/UsuarioUnico'
-import Usuarios from './components/Usuarios'
-import AuthFeedback from './components/AuthFeedback'
-import EditorExemplosPrompt from './components/EditorExemplosPrompt'
-import PoliticaPrivacidade from './components/PoliticaPrivacidade'
+import { Route, Routes, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import ConfigEmpresa from './components/ConfigEmpresa';
+import RotaPrivada from './components/RotaPrivada';
+import Empresas from './components/Empresas';
+import NovaEmpresa from './components/NovaEmpresa';
+import UsuarioUnico from './components/UsuarioUnico';
+import Usuarios from './components/Usuarios';
+import AuthFeedback from './components/AuthFeedback';
+import EditorExemplosPrompt from './components/EditorExemplosPrompt';
+import PoliticaPrivacidade from './components/PoliticaPrivacidade';
 
 export async function loader({ params }) {
-  return params
+  return params;
 }
 
 const AppRoutes = () => {
@@ -34,7 +34,7 @@ const AppRoutes = () => {
       <Route path="/auth-success" element={<AuthFeedback status="success" />} />
       <Route path="/auth-failed" element={<AuthFeedback status="failed" />} />
     </Routes>
-  )
-}
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;

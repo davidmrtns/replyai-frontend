@@ -1,29 +1,29 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function FormEstagioRD({ estagio, selecionar }) {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [atalho, setAtalho] = useState('')
-  const [dealStageId, setDealStageId] = useState('')
-  const [userId, setUserId] = useState('')
-  const [dealStageInicial, setDealStageInicial] = useState(false)
-  const [enviado, setEnviado] = useState('')
-  const [excluido, setExcluido] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [atalho, setAtalho] = useState('');
+  const [dealStageId, setDealStageId] = useState('');
+  const [userId, setUserId] = useState('');
+  const [dealStageInicial, setDealStageInicial] = useState(false);
+  const [enviado, setEnviado] = useState('');
+  const [excluido, setExcluido] = useState(false);
 
   useEffect(() => {
     if (estagio) {
-      setAtalho(estagio.atalho || '')
-      setDealStageId(estagio.deal_stage_id || '')
-      setUserId(estagio.user_id || '')
-      setDealStageInicial(estagio.deal_stage_inicial || false)
+      setAtalho(estagio.atalho || '');
+      setDealStageId(estagio.deal_stage_id || '');
+      setUserId(estagio.user_id || '');
+      setDealStageInicial(estagio.deal_stage_inicial || false);
     }
-  }, [estagio])
+  }, [estagio]);
 
   const addEstagio = (novoEstagio) => {
     setEmpresa((prevEmpresa) => {
@@ -33,16 +33,16 @@ function FormEstagioRD({ estagio, selecionar }) {
           estagios: [...prevEmpresa.rdstationcrm_client[0].estagios, novoEstagio],
         },
         ...prevEmpresa.rdstationcrm_client.slice(1),
-      ]
+      ];
 
       return {
         ...prevEmpresa,
         rdstationcrm_client: clientAtualizado,
-      }
-    })
+      };
+    });
 
-    selecionar(novoEstagio)
-  }
+    selecionar(novoEstagio);
+  };
 
   const updEstagio = (id, estagioAtualizado) => {
     setEmpresa((prevEmpresa) => {
@@ -54,14 +54,14 @@ function FormEstagioRD({ estagio, selecionar }) {
           ),
         },
         ...prevEmpresa.rdstationcrm_client.slice(1),
-      ]
+      ];
 
       return {
         ...prevEmpresa,
         rdstationcrm_client: clientAtualizado,
-      }
-    })
-  }
+      };
+    });
+  };
 
   const delEstagio = (id) => {
     setEmpresa((prevEmpresa) => {
@@ -73,19 +73,19 @@ function FormEstagioRD({ estagio, selecionar }) {
           ),
         },
         ...prevEmpresa.rdstationcrm_client.slice(1),
-      ]
+      ];
 
       return {
         ...prevEmpresa,
         rdstationcrm_client: clientAtualizado,
-      }
-    })
+      };
+    });
 
-    selecionar('+')
-  }
+    selecionar('+');
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (estagio === '+') {
       var resposta = await apiFetch.adicionarEstagioRD(
@@ -94,13 +94,13 @@ function FormEstagioRD({ estagio, selecionar }) {
         dealStageId,
         userId,
         dealStageInicial,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        addEstagio(resposta)
-        alert('Estágio do funil adicionado com sucesso')
+        resposta = await resposta.json();
+        addEstagio(resposta);
+        alert('Estágio do funil adicionado com sucesso');
       } else {
-        alert('Não foi possível adicionar o estágio')
+        alert('Não foi possível adicionar o estágio');
       }
     } else {
       var resposta = await apiFetch.editarInformacoesEstagioRD(
@@ -110,35 +110,35 @@ function FormEstagioRD({ estagio, selecionar }) {
         dealStageId,
         userId,
         dealStageInicial,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        updEstagio(estagio.id, resposta)
-        alert('Dados atualizados com sucesso')
+        resposta = await resposta.json();
+        updEstagio(estagio.id, resposta);
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Ocorreu um erro')
+        alert('Ocorreu um erro');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const excluir = async () => {
-    setExcluido(true)
+    setExcluido(true);
 
-    var resposta = await apiFetch.removerEstagioRD(empresa.slug, estagio.id)
+    var resposta = await apiFetch.removerEstagioRD(empresa.slug, estagio.id);
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       if (resposta === true) {
-        delEstagio(estagio.id)
-        alert('Estágio excluído com sucesso')
+        delEstagio(estagio.id);
+        alert('Estágio excluído com sucesso');
       } else {
-        alert('Não foi possível excluir o estágio. Tente novamente')
+        alert('Não foi possível excluir o estágio. Tente novamente');
       }
     }
 
-    setExcluido(false)
-  }
+    setExcluido(false);
+  };
 
   return (
     <Form>
@@ -203,7 +203,7 @@ function FormEstagioRD({ estagio, selecionar }) {
         )}
       </div>
     </Form>
-  )
+  );
 }
 
-export default FormEstagioRD
+export default FormEstagioRD;

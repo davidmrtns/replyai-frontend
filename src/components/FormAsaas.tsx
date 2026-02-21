@@ -1,28 +1,28 @@
-import { useContext, useEffect, useState } from 'react'
-import { Form } from 'react-bootstrap'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import FormAsaasUnico from './FormAsaasUnico'
-import Accordion from 'react-bootstrap/Accordion'
+import { useContext, useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import FormAsaasUnico from './FormAsaasUnico';
+import Accordion from 'react-bootstrap/Accordion';
 
 function FormAsaas() {
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [asaasClients, setAsaasClients] = useState('')
-  const [clienteSelecionado, setClienteSelecionado] = useState(null)
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [asaasClients, setAsaasClients] = useState('');
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
 
   useEffect(() => {
     if (empresa) {
-      setAsaasClients(empresa.asaas_client)
+      setAsaasClients(empresa.asaas_client);
     }
-  }, [empresa])
+  }, [empresa]);
 
   const alterarClienteSelecionado = (id) => {
     if (id === '+') {
-      setClienteSelecionado('+')
+      setClienteSelecionado('+');
     } else {
-      var cliente = asaasClients.find((cli) => cli.id === parseInt(id))
-      setClienteSelecionado(cliente)
+      var cliente = asaasClients.find((cli) => cli.id === parseInt(id));
+      setClienteSelecionado(cliente);
     }
-  }
+  };
 
   return (
     <Form>
@@ -55,7 +55,7 @@ function FormAsaas() {
         ''
       )}
     </Form>
-  )
+  );
 }
 
-export default FormAsaas
+export default FormAsaas;

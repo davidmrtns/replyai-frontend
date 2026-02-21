@@ -1,76 +1,76 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 function FormGoogleCalendar() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [googleCalendarClient, setGoogleCalendarClient] = useState('')
-  const [clientEmail, setClientEmail] = useState('')
-  const [timezone, setTimezone] = useState('')
-  const [enviado, setEnviado] = useState(false)
-  const [carregandoLogin, setCarregandoLogin] = useState(false)
-  const [timezones, setTimezones] = useState([])
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [googleCalendarClient, setGoogleCalendarClient] = useState('');
+  const [clientEmail, setClientEmail] = useState('');
+  const [timezone, setTimezone] = useState('');
+  const [enviado, setEnviado] = useState(false);
+  const [carregandoLogin, setCarregandoLogin] = useState(false);
+  const [timezones, setTimezones] = useState([]);
 
   useEffect(() => {
     if (empresa) {
-      setGoogleCalendarClient(empresa.googlecalendar_client[0])
+      setGoogleCalendarClient(empresa.googlecalendar_client[0]);
     }
-  }, [empresa])
+  }, [empresa]);
 
   useEffect(() => {
     if (googleCalendarClient) {
-      setClientEmail(googleCalendarClient.client_email)
-      setTimezone(googleCalendarClient.timezone)
-      listarFusos()
+      setClientEmail(googleCalendarClient.client_email);
+      setTimezone(googleCalendarClient.timezone);
+      listarFusos();
     }
-  }, [googleCalendarClient])
+  }, [googleCalendarClient]);
 
   const listarFusos = async () => {
-    var dados = await apiFetch.listarFusosPytz()
+    var dados = await apiFetch.listarFusosPytz();
     if (dados) {
-      setTimezones(dados.timezones)
+      setTimezones(dados.timezones);
     } else {
-      setTimezones([])
+      setTimezones([]);
     }
-  }
+  };
 
   const enviar = async () => {
-    setEnviado(true)
-    var resposta = await apiFetch.editarFusoHorarioGoogleCalendar(empresa.slug, timezone)
+    setEnviado(true);
+    var resposta = await apiFetch.editarFusoHorarioGoogleCalendar(empresa.slug, timezone);
 
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       setEmpresa((prevEmpresa) => {
         return {
           ...prevEmpresa,
           googlecalendar_client: [resposta],
-        }
-      })
-      alert('Dados atualizados com sucesso')
+        };
+      });
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const autenticar = async () => {
-    setCarregandoLogin(true)
+    setCarregandoLogin(true);
 
-    var link = await apiFetch.obterLinkGoogle(empresa.slug)
+    var link = await apiFetch.obterLinkGoogle(empresa.slug);
     if (link) {
-      window.open(link, '_blank', 'noopener,noreferrer')
+      window.open(link, '_blank', 'noopener,noreferrer');
     } else {
-      alert('Ocorreu um erro com o login do Google')
+      alert('Ocorreu um erro com o login do Google');
     }
 
-    setCarregandoLogin(false)
-  }
+    setCarregandoLogin(false);
+  };
 
   return (
     <Form>
@@ -118,7 +118,7 @@ function FormGoogleCalendar() {
         ''
       )}
     </Form>
-  )
+  );
 }
 
-export default FormGoogleCalendar
+export default FormGoogleCalendar;

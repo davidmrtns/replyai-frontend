@@ -1,25 +1,25 @@
-import Button from 'react-bootstrap/Button'
-import Container from 'react-bootstrap/Container'
-import Nav from 'react-bootstrap/Nav'
-import Navbar from 'react-bootstrap/Navbar'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faRightFromBracket, faScroll } from '@fortawesome/free-solid-svg-icons'
-import ApiFetch from '../utils/ApiFetch'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import replyaiLogo from '../replyai-logo.svg'
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faRightFromBracket, faScroll } from '@fortawesome/free-solid-svg-icons';
+import ApiFetch from '../utils/ApiFetch';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import replyaiLogo from '../replyai-logo.svg';
 
 function NavbarReplyAI() {
-  const apiFetch = new ApiFetch()
-  const navigate = useNavigate()
-  const { usuarioLogado } = useAuth() || {}
+  const apiFetch = new ApiFetch();
+  const navigate = useNavigate();
+  const { usuarioLogado } = useAuth() || {};
 
   const deslogar = async () => {
-    var resposta = await apiFetch.logout()
+    var resposta = await apiFetch.logout();
     if (resposta) {
-      navigate('/login')
+      navigate('/login');
     }
-  }
+  };
 
   return (
     <Navbar expand="lg" className="navbar-replyai fixed-top" variant="dark">
@@ -63,7 +63,7 @@ function NavbarReplyAI() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  )
+  );
 }
 
-export default NavbarReplyAI
+export default NavbarReplyAI;

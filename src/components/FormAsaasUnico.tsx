@@ -1,58 +1,58 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form, InputGroup } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form, InputGroup } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function FormAsaasUnico({ asaasClient, selecionar }) {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [token, setToken] = useState('')
-  const [rotulo, setRotulo] = useState('')
-  const [clientNumber, setClientNumer] = useState(0)
-  const [webhookAgradecer, setWebhookAgradecer] = useState('')
-  const [webhookNotaFiscal, setWebhookNotaFiscal] = useState('')
-  const [enviado, setEnviado] = useState(false)
-  const [excluido, setExcluido] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [token, setToken] = useState('');
+  const [rotulo, setRotulo] = useState('');
+  const [clientNumber, setClientNumer] = useState(0);
+  const [webhookAgradecer, setWebhookAgradecer] = useState('');
+  const [webhookNotaFiscal, setWebhookNotaFiscal] = useState('');
+  const [enviado, setEnviado] = useState(false);
+  const [excluido, setExcluido] = useState(false);
 
   useEffect(() => {
     if (asaasClient) {
-      setToken(asaasClient.token || '')
-      setRotulo(asaasClient.rotulo || '')
-      setClientNumer(asaasClient.client_number || 0)
+      setToken(asaasClient.token || '');
+      setRotulo(asaasClient.rotulo || '');
+      setClientNumer(asaasClient.client_number || 0);
 
       if (asaasClient.client_number !== null) {
         setWebhookAgradecer(
           `${apiFetch.urlBase}/trabalho/agradecer_pagamento/asaas/${empresa.slug}/${empresa.token}/${asaasClient.client_number}`,
-        )
+        );
         setWebhookNotaFiscal(
           `${apiFetch.urlBase}/trabalho/enviar_nf/asaas/${empresa.slug}/${empresa.token}/${asaasClient.client_number}`,
-        )
+        );
       }
     }
-  }, [asaasClient])
+  }, [asaasClient]);
 
   const copiarTexto = async (texto) => {
     try {
-      await navigator.clipboard.writeText(texto)
-      alert('Informação copiada com sucesso!')
+      await navigator.clipboard.writeText(texto);
+      alert('Informação copiada com sucesso!');
     } catch {
-      alert('Opa, não foi possível copiar essa informação...')
+      alert('Opa, não foi possível copiar essa informação...');
     }
-  }
+  };
 
   const addCliente = (novoCliente) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         asaas_client: [...(prevEmpresa?.asaas_client || []), novoCliente],
-      }
-    })
+      };
+    });
 
-    selecionar(novoCliente)
-  }
+    selecionar(novoCliente);
+  };
 
   const updCliente = (id, clienteAtualizado) => {
     setEmpresa((prevEmpresa) => {
@@ -61,36 +61,41 @@ function FormAsaasUnico({ asaasClient, selecionar }) {
         asaas_client: prevEmpresa.asaas_client.map((cliente) =>
           cliente.id === id ? { ...cliente, ...clienteAtualizado } : cliente,
         ),
-      }
-    })
-  }
+      };
+    });
+  };
 
   const delCliente = (id) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         asaas_client: prevEmpresa.asaas_client.filter((cliente) => cliente.id !== id),
-      }
-    })
+      };
+    });
 
-    selecionar('+')
-  }
+    selecionar('+');
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (asaasClient === '+') {
-      var resposta = await apiFetch.adicionarClienteAsaas(empresa.slug, token, rotulo, clientNumber)
+      var resposta = await apiFetch.adicionarClienteAsaas(
+        empresa.slug,
+        token,
+        rotulo,
+        clientNumber,
+      );
       if (resposta) {
         if (resposta.status === 200) {
-          resposta = await resposta.json()
-          addCliente(resposta)
-          alert('Cliente adicionado com sucesso')
+          resposta = await resposta.json();
+          addCliente(resposta);
+          alert('Cliente adicionado com sucesso');
         } else if (resposta.status === 409) {
-          resposta = await resposta.json()
-          alert(resposta.detail)
+          resposta = await resposta.json();
+          alert(resposta.detail);
         } else {
-          alert('Ocorreu um erro')
+          alert('Ocorreu um erro');
         }
       }
     } else {
@@ -99,37 +104,37 @@ function FormAsaasUnico({ asaasClient, selecionar }) {
         token,
         rotulo,
         clientNumber,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        updCliente(asaasClient.id, resposta)
-        alert('Dados atualizados com sucesso')
+        resposta = await resposta.json();
+        updCliente(asaasClient.id, resposta);
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Ocorreu um erro')
+        alert('Ocorreu um erro');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const excluir = async () => {
-    setExcluido(true)
+    setExcluido(true);
 
-    var resposta = await apiFetch.removerClienteAsaas(empresa.slug, asaasClient.id)
+    var resposta = await apiFetch.removerClienteAsaas(empresa.slug, asaasClient.id);
     if (resposta) {
       if (resposta.status === 200) {
-        resposta = await resposta.json()
+        resposta = await resposta.json();
         if (resposta === true) {
-          delCliente(asaasClient.id)
-          alert('Cliente excluído com sucesso')
+          delCliente(asaasClient.id);
+          alert('Cliente excluído com sucesso');
         } else {
-          alert('Não foi possível excluir o cliente. Tente novamente')
+          alert('Não foi possível excluir o cliente. Tente novamente');
         }
       }
     }
 
-    setExcluido(false)
-  }
+    setExcluido(false);
+  };
 
   return (
     <Form>
@@ -221,7 +226,7 @@ function FormAsaasUnico({ asaasClient, selecionar }) {
         )}
       </div>
     </Form>
-  )
+  );
 }
 
-export default FormAsaasUnico
+export default FormAsaasUnico;

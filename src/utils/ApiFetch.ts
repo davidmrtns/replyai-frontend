@@ -1,12 +1,12 @@
 class ApiFetch {
   constructor() {
-    this.urlBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+    this.urlBase = import.meta.env.VITE_API_URL || 'http://localhost:8000';
   }
 
   async login(username, password) {
-    const formData = new URLSearchParams()
-    formData.append('username', username)
-    formData.append('password', password)
+    const formData = new URLSearchParams();
+    formData.append('username', username);
+    formData.append('password', password);
 
     try {
       const response = await fetch(`${this.urlBase}/usuario/login`, {
@@ -16,26 +16,26 @@ class ApiFetch {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: formData.toString(),
-      })
+      });
 
       if (response.ok) {
-        const data = await response.json()
-        return data
+        const data = await response.json();
+        return data;
       } else if (response.status === 401) {
-        const errorData = await response.json()
+        const errorData = await response.json();
         alert(
           errorData.detail ||
             'Não foi possível fazer login com essas credenciais. Verifique se os dados estão corretos e se você tem acesso a esse sistema',
-        )
-        return null
+        );
+        return null;
       }
     } catch {
-      return null
+      return null;
     }
   }
 
   async logout() {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/usuario/logout`, {
@@ -44,36 +44,36 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = false
+      resposta = false;
     }
 
-    return resposta
+    return resposta;
   }
 
   async buscarUsuarioLogado() {
-    var resposta
+    var resposta;
 
     try {
       const response = await fetch(`${this.urlBase}/usuario/`, {
         method: 'get',
         credentials: 'include',
-      })
+      });
 
       if (response.ok) {
-        resposta = await response.json()
+        resposta = await response.json();
       }
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarUsuario(nome, email, senha, confirmacao, usuarioAtivo, admin, idEmpresa) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/usuario/`, {
@@ -91,16 +91,16 @@ class ApiFetch {
           admin: admin,
           id_empresa: idEmpresa,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async alterarUsuario(id, nome, email, senha, confirmacao, usuarioAtivo, admin, idEmpresa) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/usuario/`, {
@@ -119,16 +119,16 @@ class ApiFetch {
           admin: admin,
           id_empresa: idEmpresa,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerUsuario(id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/usuario/${id}`, {
@@ -137,20 +137,20 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async listarUsuarios(cursor, limite) {
-    var resposta
-    let url = `${this.urlBase}/usuario/todos?limit=${limite}`
+    var resposta;
+    let url = `${this.urlBase}/usuario/todos?limit=${limite}`;
 
     if (cursor) {
-      url += `&cursor=${cursor}`
+      url += `&cursor=${cursor}`;
     }
 
     try {
@@ -160,16 +160,16 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarEmpresa(nome, slug, fusoHorario, empresaAtiva, openaiApiKey, elevenLabsApiKey) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/`, {
@@ -186,16 +186,16 @@ class ApiFetch {
           openai_api_key: openaiApiKey,
           elevenlabs_api_key: elevenLabsApiKey,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterTodasEmpresas() {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/empresa/`, {
@@ -204,28 +204,28 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterEmpresa(slug) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}`, {
         method: 'get',
         credentials: 'include',
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesBasicas(
@@ -236,7 +236,7 @@ class ApiFetch {
     openaiApiKey,
     elevenLabsApiKey,
   ) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas`, {
@@ -252,16 +252,16 @@ class ApiFetch {
           openai_api_key: openaiApiKey,
           elevenlabs_api_key: elevenLabsApiKey,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarColaborador(slug, nome, apelido, departamento) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/colaborador`, {
@@ -275,16 +275,16 @@ class ApiFetch {
           apelido: apelido,
           departamento: departamento,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async alterarColaborador(slug, id, nome, apelido, departamento) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_basicas/colaborador`, {
@@ -299,16 +299,16 @@ class ApiFetch {
           apelido: apelido,
           departamento: departamento,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerColaborador(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(
@@ -320,37 +320,37 @@ class ApiFetch {
             'Content-Type': 'application/json',
           },
         },
-      )
+      );
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarMidia(slug, atalho, ordem, arquivo) {
-    var resposta
-    const formData = new FormData()
+    var resposta;
+    const formData = new FormData();
 
-    formData.append('atalho', atalho)
-    formData.append('ordem', ordem)
-    formData.append('arquivo', arquivo)
+    formData.append('atalho', atalho);
+    formData.append('ordem', ordem);
+    formData.append('arquivo', arquivo);
 
     try {
       resposta = await fetch(`${this.urlBase}/midia/${slug}`, {
         method: 'post',
         credentials: 'include',
         body: formData,
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async alterarMidia(slug, id, atalho, ordem) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/midia/${slug}/${id}`, {
@@ -363,16 +363,16 @@ class ApiFetch {
           atalho: atalho,
           ordem: ordem,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerMidia(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/midia/${slug}/${id}`, {
@@ -381,16 +381,16 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesAssistentes(slug, assistentePadrao) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_assistentes`, {
@@ -402,16 +402,16 @@ class ApiFetch {
         body: JSON.stringify({
           assistente_padrao: assistentePadrao,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarAssistente(slug, nome, instrucoes, proposito, atalho, voz) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/assistente/${slug}/`, {
@@ -427,16 +427,16 @@ class ApiFetch {
           atalho: atalho,
           voz: voz,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarAssistente(slug, id, nome, instrucoes, proposito, atalho, voz) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/assistente/${slug}/${id}`, {
@@ -452,16 +452,16 @@ class ApiFetch {
           atalho: atalho,
           voz: voz,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerAssistente(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/assistente/${slug}/${id}`, {
@@ -470,43 +470,43 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarVoz(slug, nome, descricao, stability, similarityBoost, style, arquivos) {
-    var resposta
-    const formData = new FormData()
+    var resposta;
+    const formData = new FormData();
 
-    formData.append('nome', nome)
-    formData.append('descricao', descricao)
-    formData.append('stability', stability)
-    formData.append('similarity_boost', similarityBoost)
-    formData.append('style', style)
+    formData.append('nome', nome);
+    formData.append('descricao', descricao);
+    formData.append('stability', stability);
+    formData.append('similarity_boost', similarityBoost);
+    formData.append('style', style);
 
     arquivos.forEach((arquivo, index) => {
-      formData.append('arquivos', arquivo)
-    })
+      formData.append('arquivos', arquivo);
+    });
 
     try {
       resposta = await fetch(`${this.urlBase}/voz/${slug}`, {
         method: 'post',
         credentials: 'include',
         body: formData,
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarVoz(slug, id, nome, descricao, stability, similarityBoost, style) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/voz/${slug}/${id}`, {
@@ -522,16 +522,16 @@ class ApiFetch {
           similarity_boost: similarityBoost,
           style: style,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerVoz(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/voz/${slug}/${id}`, {
@@ -540,12 +540,12 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesMensagens(
@@ -558,7 +558,7 @@ class ApiFetch {
     ativarRecallConfirmacao,
     mensagemErroIa,
   ) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_mensagens`, {
@@ -576,16 +576,16 @@ class ApiFetch {
           ativar_recall_confirmacao: ativarRecallConfirmacao,
           mensagem_erro_ia: mensagemErroIa,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarClienteDigisac(slug, slugDigisac, token) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/digisac/${slug}`, {
@@ -598,16 +598,16 @@ class ApiFetch {
           slug: slugDigisac,
           token: token,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesDigisac(slug, slugDigisac, token, userId, serviceId) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/digisac/${slug}`, {
@@ -622,16 +622,16 @@ class ApiFetch {
           user_id: userId,
           service_id: serviceId,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarDepartamento(slug, atalho, comentario, departmentId, userId, dptConfirmacao) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/digisac/${slug}/departamentos`, {
@@ -647,16 +647,16 @@ class ApiFetch {
           user_id: userId,
           departamento_confirmacao: dptConfirmacao,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarDepartamento(slug, id, atalho, comentario, departmentId, userId, dptConfirmacao) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/digisac/${slug}/departamentos/${id}`, {
@@ -672,16 +672,16 @@ class ApiFetch {
           user_id: userId,
           departamento_confirmacao: dptConfirmacao,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerDepartamento(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/digisac/${slug}/departamentos/${id}`, {
@@ -690,16 +690,16 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarClienteEvolutionAPI(slug, nomeInstancia) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/evolutionapi/${slug}`, {
@@ -711,12 +711,12 @@ class ApiFetch {
         body: JSON.stringify({
           nome_instancia: nomeInstancia,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesAgenda(
@@ -728,7 +728,7 @@ class ApiFetch {
     horaInicioAgenda,
     horaFinalAgenda,
   ) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_agenda`, {
@@ -745,16 +745,16 @@ class ApiFetch {
           hora_inicio_agenda: horaInicioAgenda,
           hora_final_agenda: horaFinalAgenda,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarAgenda(slug, endereco, atalho) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/agenda/${slug}`, {
@@ -767,16 +767,16 @@ class ApiFetch {
           endereco: endereco,
           atalho: atalho,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarAgenda(slug, id, endereco, atalho) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/agenda/${slug}/${id}`, {
@@ -789,16 +789,16 @@ class ApiFetch {
           endereco: endereco,
           atalho: atalho,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerAgenda(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/agenda/${slug}/${id}`, {
@@ -807,16 +807,16 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async listarFusosPytz() {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/agenda/fusos`, {
@@ -825,16 +825,16 @@ class ApiFetch {
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then((response) => response.json())
+      }).then((response) => response.json());
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarFusoHorarioOutlook(slug, fusoHorario) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/microsoft/${slug}/timezone`, {
@@ -846,16 +846,16 @@ class ApiFetch {
         body: JSON.stringify({
           fuso_horario: fusoHorario,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarFusoHorarioGoogleCalendar(slug, fusoHorario) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/google/${slug}/timezone`, {
@@ -867,16 +867,16 @@ class ApiFetch {
         body: JSON.stringify({
           fuso_horario: fusoHorario,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesCRM(slug, tipoCliente) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_crm`, {
@@ -888,16 +888,16 @@ class ApiFetch {
         body: JSON.stringify({
           tipo_cliente: tipoCliente,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarClienteRDStation(slug, token, idFontePadrao) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_crm/rdstation`, {
@@ -910,16 +910,16 @@ class ApiFetch {
           token: token,
           id_fonte_padrao: idFontePadrao,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesRDStation(slug, token, idFontePadrao) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_crm/rdstation`, {
@@ -932,16 +932,16 @@ class ApiFetch {
           token: token,
           id_fonte_padrao: idFontePadrao,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarEstagioRD(slug, atalho, dealStageId, userId, estagioInicial) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_crm/rdstation/estagio`, {
@@ -956,16 +956,16 @@ class ApiFetch {
           user_id: userId,
           estagio_inicial: estagioInicial,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesEstagioRD(slug, id, atalho, dealStageId, userId, estagioInicial) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_crm/rdstation/estagio`, {
@@ -981,16 +981,16 @@ class ApiFetch {
           user_id: userId,
           estagio_inicial: estagioInicial,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerEstagioRD(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(
@@ -1002,12 +1002,12 @@ class ApiFetch {
             'Content-Type': 'application/json',
           },
         },
-      )
+      );
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesFinanceiras(
@@ -1017,7 +1017,7 @@ class ApiFetch {
     enviarBoletoVencimentos,
     cobrarInadimplentes,
   ) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_financeiras`, {
@@ -1032,16 +1032,16 @@ class ApiFetch {
           enviar_boletos_vencimentos: enviarBoletoVencimentos,
           cobrar_inadimplentes: cobrarInadimplentes,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarClienteAsaas(slug, token, rotulo, clientNumber) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_financeiras/asaas`, {
@@ -1055,16 +1055,16 @@ class ApiFetch {
           rotulo: rotulo,
           numero_cliente: clientNumber,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarInformacoesClienteAsaas(slug, token, rotulo, clientNumber) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(`${this.urlBase}/empresa/${slug}/informacoes_financeiras/asaas`, {
@@ -1078,16 +1078,16 @@ class ApiFetch {
           rotulo: rotulo,
           numero_cliente: clientNumber,
         }),
-      })
+      });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async removerClienteAsaas(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       resposta = await fetch(
@@ -1099,16 +1099,16 @@ class ApiFetch {
             'Content-Type': 'application/json',
           },
         },
-      )
+      );
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterAssistentesEmpresa(slug) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/empresa/${slug}/assistentes`, {
@@ -1117,17 +1117,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterMessageClient(slug) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/empresa/${slug}/message_client`, {
@@ -1136,17 +1136,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterInstrucoes(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/assistente/${slug}/${id}`, {
@@ -1155,17 +1155,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterVozElevenLabs(slug, id) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/voz/${slug}/${id}`, {
@@ -1174,17 +1174,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async criarInstanciaEvolution(slug, nomeInstancia, webhook) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}`, {
@@ -1197,17 +1197,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterInstanciaEvolution(slug, apiKey) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}`, {
@@ -1216,17 +1216,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async conectarInstanciaEvolution(slug, apiKey) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/conectar`, {
@@ -1235,17 +1235,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async reiniciarInstanciaEvolution(slug, apiKey) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/reiniciar`, {
@@ -1254,17 +1254,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async desligarInstanciaEvolution(slug, apiKey) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/desligar`, {
@@ -1273,17 +1273,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async checarConexaoInstanciaEvolution(slug, apiKey) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/checar-conexao`, {
@@ -1292,17 +1292,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async adicionarWebhookEvolutionAPI(slug, apiKey, webhookUrl, habilitado) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/webhook`, {
@@ -1318,17 +1318,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async listarWebhooksEvolutionAPI(slug, apiKey) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/evolutionapi/${slug}/${apiKey}/webhook`, {
@@ -1340,17 +1340,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async listarServicosDigisac(slug, pagina, nome, id) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(
@@ -1365,17 +1365,17 @@ class ApiFetch {
       )
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async listarUsuariosDigisac(slug, pagina, nome, id) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(
@@ -1390,17 +1390,17 @@ class ApiFetch {
       )
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async listarDepartamentosDigisac(slug, pagina, nome, id) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(
@@ -1415,17 +1415,17 @@ class ApiFetch {
       )
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterLinkMicrosoft(slug) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/microsoft/${slug}/auth-link`, {
@@ -1437,17 +1437,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async listarFusosOutlook(slug) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/microsoft/${slug}/timezones`, {
@@ -1459,17 +1459,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterLinkGoogle(slug) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/google/${slug}/auth-link`, {
@@ -1481,17 +1481,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async criarExemploPrompt(tipo, prompt) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/exemplo/`, {
@@ -1507,17 +1507,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async obterExemploPrompt(tipo) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/exemplo/${tipo}`, {
@@ -1529,17 +1529,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async editarExemploPrompt(tipo, prompt) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/exemplo/${tipo}`, {
@@ -1554,17 +1554,17 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 
   async excluirExemploPrompt(tipo) {
-    var resposta
+    var resposta;
 
     try {
       await fetch(`${this.urlBase}/exemplo/${tipo}`, {
@@ -1576,14 +1576,14 @@ class ApiFetch {
       })
         .then((response) => response.json())
         .then((data) => {
-          resposta = data
-        })
+          resposta = data;
+        });
     } catch {
-      resposta = null
+      resposta = null;
     }
 
-    return resposta
+    return resposta;
   }
 }
 
-export default ApiFetch
+export default ApiFetch;

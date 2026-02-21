@@ -1,153 +1,153 @@
-import { useContext, useEffect, useState } from 'react'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { Button, Form, FormGroup } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { useContext, useEffect, useState } from 'react';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { Button, Form, FormGroup } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function FormVoz({ voz, selecionar }) {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [voiceId, setVoiceId] = useState('')
-  const [arquivos, setArquivos] = useState([])
-  const [nome, setNome] = useState('')
-  const [descricao, setDescricao] = useState('')
-  const [previewUrl, setPreviewUrl] = useState('')
-  const [stability, setStability] = useState(0.7)
-  const [similarityBoost, setSimilarityBoost] = useState(0.7)
-  const [style, setStyle] = useState(0)
-  const [carregandoVozElevenLabs, setCarregandoVozElevenLabs] = useState(false)
-  const [enviado, setEnviado] = useState(false)
-  const [excluido, setExcluido] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [voiceId, setVoiceId] = useState('');
+  const [arquivos, setArquivos] = useState([]);
+  const [nome, setNome] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [previewUrl, setPreviewUrl] = useState('');
+  const [stability, setStability] = useState(0.7);
+  const [similarityBoost, setSimilarityBoost] = useState(0.7);
+  const [style, setStyle] = useState(0);
+  const [carregandoVozElevenLabs, setCarregandoVozElevenLabs] = useState(false);
+  const [enviado, setEnviado] = useState(false);
+  const [excluido, setExcluido] = useState(false);
 
   useEffect(() => {
     const obterVozElevenLabs = async () => {
-      setCarregandoVozElevenLabs(true)
+      setCarregandoVozElevenLabs(true);
 
       if (voz?.id) {
-        var dados = await apiFetch.obterVozElevenLabs(empresa.slug, voz.id)
+        var dados = await apiFetch.obterVozElevenLabs(empresa.slug, voz.id);
         if (dados) {
-          setPreviewUrl(dados.preview_url)
-          setDescricao(dados.descricao)
+          setPreviewUrl(dados.preview_url);
+          setDescricao(dados.descricao);
         } else {
-          setPreviewUrl('')
-          setDescricao('')
+          setPreviewUrl('');
+          setDescricao('');
         }
       } else {
-        setPreviewUrl('')
-        setDescricao('')
+        setPreviewUrl('');
+        setDescricao('');
       }
 
-      setCarregandoVozElevenLabs(false)
-    }
+      setCarregandoVozElevenLabs(false);
+    };
 
     if (voz) {
-      setNome(voz.nome || '')
-      setVoiceId(voz.voiceId || '')
-      setStability(voz.stability || 0.7)
-      setSimilarityBoost(voz.similarity_boost || 0.7)
-      setStyle(voz.style || 0)
+      setNome(voz.nome || '');
+      setVoiceId(voz.voiceId || '');
+      setStability(voz.stability || 0.7);
+      setSimilarityBoost(voz.similarity_boost || 0.7);
+      setStyle(voz.style || 0);
 
-      obterVozElevenLabs()
+      obterVozElevenLabs();
     }
-  }, [voz])
+  }, [voz]);
 
   const adicionarArquivo = async (event) => {
-    const minDuracao = 5 * 60
-    const arquivoSelecionado = event.target.files[0]
+    const minDuracao = 5 * 60;
+    const arquivoSelecionado = event.target.files[0];
 
     if (!arquivoSelecionado) {
-      alert('Nenhum arquivo selecionado')
-      setArquivos([])
-      event.target.value = ''
-      return
+      alert('Nenhum arquivo selecionado');
+      setArquivos([]);
+      event.target.value = '';
+      return;
     }
 
     if (!arquivoSelecionado.type.startsWith('audio/')) {
-      alert('Apenas arquivos de áudio são permitidos')
-      setArquivos([])
-      event.target.value = ''
-      return
+      alert('Apenas arquivos de áudio são permitidos');
+      setArquivos([]);
+      event.target.value = '';
+      return;
     }
 
-    const duracao = await getAudioDuration(arquivoSelecionado)
+    const duracao = await getAudioDuration(arquivoSelecionado);
     if (duracao < minDuracao) {
-      alert('O áudio deve ter pelo menos 5 minutos')
-      setArquivos([])
-      event.target.value = ''
-      return
+      alert('O áudio deve ter pelo menos 5 minutos');
+      setArquivos([]);
+      event.target.value = '';
+      return;
     }
 
-    setArquivos([arquivoSelecionado])
-  }
+    setArquivos([arquivoSelecionado]);
+  };
 
   const getAudioDuration = (file) => {
     return new Promise((resolve, reject) => {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)()
-      const reader = new FileReader()
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const reader = new FileReader();
 
       reader.onload = function (event) {
-        const arrayBuffer = event.target.result
+        const arrayBuffer = event.target.result;
         audioContext.decodeAudioData(
           arrayBuffer,
           (audioBuffer) => {
-            resolve(audioBuffer.duration)
+            resolve(audioBuffer.duration);
           },
           reject,
-        )
-      }
+        );
+      };
 
-      reader.onerror = reject
-      reader.readAsArrayBuffer(file)
-    })
-  }
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+  };
 
   const addVoz = (novaVoz) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         vozes: [...(prevEmpresa?.vozes || []), novaVoz],
-      }
-    })
+      };
+    });
 
-    selecionar(novaVoz)
-  }
+    selecionar(novaVoz);
+  };
 
   const updVoz = (id, vozAtualizada) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         vozes: prevEmpresa.vozes.map((voz) => (voz.id === id ? { ...voz, ...vozAtualizada } : voz)),
-      }
-    })
-  }
+      };
+    });
+  };
 
   const delVoz = (id) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         vozes: prevEmpresa.vozes.filter((voz) => voz.id !== id),
-      }
-    })
+      };
+    });
 
-    selecionar('+')
-  }
+    selecionar('+');
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (voz === '+') {
       if (nome.trim() === '') {
-        alert('Digite um nome válido para a voz')
+        alert('Digite um nome válido para a voz');
       } else if (arquivos.length <= 0) {
-        alert('Você deve selecionar um arquivo de áudio com a voz que você deseja clonar')
+        alert('Você deve selecionar um arquivo de áudio com a voz que você deseja clonar');
       } else if (stability < 0 || stability > 1) {
-        alert('O valor de estabilidade da voz deve ser um valor entre 0 e 1')
+        alert('O valor de estabilidade da voz deve ser um valor entre 0 e 1');
       } else if (similarityBoost < 0 || similarityBoost > 1) {
-        alert('O valor de boost de similaridade da voz deve ser um valor entre 0 e 1')
+        alert('O valor de boost de similaridade da voz deve ser um valor entre 0 e 1');
       } else if (style < 0 || style > 1) {
-        alert('O valor de estilo da voz deve ser um valor entre 0 e 1')
+        alert('O valor de estilo da voz deve ser um valor entre 0 e 1');
       } else {
         var resposta = await apiFetch.adicionarVoz(
           empresa.slug,
@@ -157,13 +157,13 @@ function FormVoz({ voz, selecionar }) {
           similarityBoost,
           style,
           arquivos,
-        )
+        );
         if (resposta && resposta.status === 200) {
-          resposta = await resposta.json()
-          addVoz(resposta)
-          alert('Voz clonada com sucesso')
+          resposta = await resposta.json();
+          addVoz(resposta);
+          alert('Voz clonada com sucesso');
         } else {
-          alert('Não foi possível adicionar a voz')
+          alert('Não foi possível adicionar a voz');
         }
       }
     } else {
@@ -175,35 +175,35 @@ function FormVoz({ voz, selecionar }) {
         stability,
         similarityBoost,
         style,
-      )
+      );
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        updVoz(voz.id, resposta)
-        alert('Dados atualizados com sucesso')
+        resposta = await resposta.json();
+        updVoz(voz.id, resposta);
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Ocorreu um erro ao atualizar os dados')
+        alert('Ocorreu um erro ao atualizar os dados');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const excluir = async () => {
-    setExcluido(true)
+    setExcluido(true);
 
-    var resposta = await apiFetch.removerVoz(empresa.slug, voz.id)
+    var resposta = await apiFetch.removerVoz(empresa.slug, voz.id);
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       if (resposta === true) {
-        delVoz(voz.id)
-        alert('Voz excluída com sucesso')
+        delVoz(voz.id);
+        alert('Voz excluída com sucesso');
       } else {
-        alert('Não foi possível excluir a voz. Tente novamente')
+        alert('Não foi possível excluir a voz. Tente novamente');
       }
     }
 
-    setExcluido(false)
-  }
+    setExcluido(false);
+  };
 
   return (
     <Form>
@@ -323,7 +323,7 @@ function FormVoz({ voz, selecionar }) {
         )}
       </div>
     </Form>
-  )
+  );
 }
 
-export default FormVoz
+export default FormVoz;

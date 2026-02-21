@@ -1,76 +1,76 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMicrosoft } from '@fortawesome/free-brands-svg-icons'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 
 function FormOutlook() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [outlookClient, setOutlookClient] = useState('')
-  const [usuarioPadrao, setUsuarioPadrao] = useState('')
-  const [timeZone, setTimeZone] = useState('')
-  const [timeZones, setTimeZones] = useState([])
-  const [enviado, setEnviado] = useState(false)
-  const [carregandoLogin, setCarregandoLogin] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [outlookClient, setOutlookClient] = useState('');
+  const [usuarioPadrao, setUsuarioPadrao] = useState('');
+  const [timeZone, setTimeZone] = useState('');
+  const [timeZones, setTimeZones] = useState([]);
+  const [enviado, setEnviado] = useState(false);
+  const [carregandoLogin, setCarregandoLogin] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setOutlookClient(empresa.outlook_client[0])
+      setOutlookClient(empresa.outlook_client[0]);
     }
-  }, [empresa])
+  }, [empresa]);
 
   useEffect(() => {
     if (outlookClient) {
-      setUsuarioPadrao(outlookClient.usuarioPadrao)
-      setTimeZone(outlookClient.timeZone)
-      listarFusos()
+      setUsuarioPadrao(outlookClient.usuarioPadrao);
+      setTimeZone(outlookClient.timeZone);
+      listarFusos();
     }
-  }, [outlookClient])
+  }, [outlookClient]);
 
   const listarFusos = async () => {
-    var dados = await apiFetch.listarFusosOutlook(empresa.slug)
+    var dados = await apiFetch.listarFusosOutlook(empresa.slug);
     if (dados) {
-      setTimeZones(dados)
+      setTimeZones(dados);
     } else {
-      setTimeZones([])
+      setTimeZones([]);
     }
-  }
+  };
 
   const enviar = async () => {
-    setEnviado(true)
-    var resposta = await apiFetch.editarFusoHorarioOutlook(empresa.slug, timeZone)
+    setEnviado(true);
+    var resposta = await apiFetch.editarFusoHorarioOutlook(empresa.slug, timeZone);
 
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       setEmpresa((prevEmpresa) => {
         return {
           ...prevEmpresa,
           outlook_client: [resposta],
-        }
-      })
-      alert('Dados atualizados com sucesso')
+        };
+      });
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const autenticar = async () => {
-    setCarregandoLogin(true)
+    setCarregandoLogin(true);
 
-    var link = await apiFetch.obterLinkMicrosoft(empresa.slug)
+    var link = await apiFetch.obterLinkMicrosoft(empresa.slug);
     if (link) {
-      window.open(link, '_blank', 'noopener,noreferrer')
+      window.open(link, '_blank', 'noopener,noreferrer');
     } else {
-      alert('Ocorreu um erro com o login da Microsoft')
+      alert('Ocorreu um erro com o login da Microsoft');
     }
 
-    setCarregandoLogin(false)
-  }
+    setCarregandoLogin(false);
+  };
 
   return (
     <Form>
@@ -121,7 +121,7 @@ function FormOutlook() {
         ''
       )}
     </Form>
-  )
+  );
 }
 
-export default FormOutlook
+export default FormOutlook;

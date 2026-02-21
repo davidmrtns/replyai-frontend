@@ -1,30 +1,30 @@
-import { useEffect, useState } from 'react'
-import ApiFetch from '../utils/ApiFetch'
-import { Navigate, Outlet } from 'react-router-dom'
-import Spinner from 'react-bootstrap/Spinner'
-import { AuthContext } from '../contexts/AuthContext'
+import { useEffect, useState } from 'react';
+import ApiFetch from '../utils/ApiFetch';
+import { Navigate, Outlet } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
+import { AuthContext } from '../contexts/AuthContext';
 
 function RotaPrivada() {
-  const apiFetch = new ApiFetch()
-  const [usuarioLogado, setUsuarioLogado] = useState(null)
-  const [carregando, setCarregando] = useState(true)
+  const apiFetch = new ApiFetch();
+  const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     const obterUsuario = async () => {
       try {
-        const dados = await apiFetch.buscarUsuarioLogado()
+        const dados = await apiFetch.buscarUsuarioLogado();
 
         if (dados != 'Não autenticado') {
-          setUsuarioLogado(dados)
+          setUsuarioLogado(dados);
         }
       } catch {
-        setUsuarioLogado(null)
+        setUsuarioLogado(null);
       } finally {
-        setCarregando(false)
+        setCarregando(false);
       }
-    }
-    obterUsuario()
-  }, [])
+    };
+    obterUsuario();
+  }, []);
 
   if (carregando) {
     return (
@@ -33,18 +33,18 @@ function RotaPrivada() {
           <span className="visually-hidden">Carregando...</span>
         </Spinner>
       </div>
-    )
+    );
   }
 
   if (!usuarioLogado) {
-    return <Navigate to="/login" />
+    return <Navigate to="/login" />;
   }
 
   return (
     <AuthContext.Provider value={{ usuarioLogado, setUsuarioLogado }}>
       <Outlet />
     </AuthContext.Provider>
-  )
+  );
 }
 
-export default RotaPrivada
+export default RotaPrivada;

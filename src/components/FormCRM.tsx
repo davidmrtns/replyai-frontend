@@ -1,37 +1,37 @@
-import { useEffect, useState, useContext } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import Accordion from 'react-bootstrap/Accordion'
-import FormRDStation from './FormRDStation'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
+import { useEffect, useState, useContext } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import FormRDStation from './FormRDStation';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
 
 function FormCRM() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [tipoCRMClient, setTipoCRMClient] = useState()
-  const [enviado, setEnviado] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [tipoCRMClient, setTipoCRMClient] = useState();
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setTipoCRMClient(empresa.crm_client_type)
+      setTipoCRMClient(empresa.crm_client_type);
     }
-  }, [empresa])
+  }, [empresa]);
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
-    var resposta = await apiFetch.editarInformacoesCRM(empresa.slug, tipoCRMClient)
+    var resposta = await apiFetch.editarInformacoesCRM(empresa.slug, tipoCRMClient);
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
-      setEmpresa(resposta)
-      alert('Dados atualizados com sucesso')
+      resposta = await resposta.json();
+      setEmpresa(resposta);
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   return (
     <Form>
@@ -68,7 +68,7 @@ function FormCRM() {
         )}
       </Button>
     </Form>
-  )
+  );
 }
 
-export default FormCRM
+export default FormCRM;

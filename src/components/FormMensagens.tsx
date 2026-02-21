@@ -1,38 +1,38 @@
-import { useEffect, useState, useContext } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import Accordion from 'react-bootstrap/Accordion'
-import FormDigisac from './FormDigisac'
-import FormEvolution from './FormEvolution'
-import Spinner from 'react-bootstrap/Spinner'
-import ApiFetch from '../utils/ApiFetch'
-import { EmpresaContext } from '../contexts/EmpresaContext'
+import { useEffect, useState, useContext } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import FormDigisac from './FormDigisac';
+import FormEvolution from './FormEvolution';
+import Spinner from 'react-bootstrap/Spinner';
+import ApiFetch from '../utils/ApiFetch';
+import { EmpresaContext } from '../contexts/EmpresaContext';
 
 function FormMensagens() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [tipoMessageClient, setTipoMessageClient] = useState('')
-  const [tempoRecall, setTempoRecall] = useState(0)
-  const [tempoUltimoRecall, setTempoUltimoRecall] = useState(0)
-  const [quantRecalls, setQuantRecalls] = useState(0)
-  const [ativarRecall, setAtivarRecall] = useState(false)
-  const [ativarRecallConfirmacao, setAtivarRecallConfirmacao] = useState(false)
-  const [mensagemErroIa, setMensagemErroIa] = useState('')
-  const [enviado, setEnviado] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [tipoMessageClient, setTipoMessageClient] = useState('');
+  const [tempoRecall, setTempoRecall] = useState(0);
+  const [tempoUltimoRecall, setTempoUltimoRecall] = useState(0);
+  const [quantRecalls, setQuantRecalls] = useState(0);
+  const [ativarRecall, setAtivarRecall] = useState(false);
+  const [ativarRecallConfirmacao, setAtivarRecallConfirmacao] = useState(false);
+  const [mensagemErroIa, setMensagemErroIa] = useState('');
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setTipoMessageClient(empresa.message_client_type || '')
-      setTempoRecall(empresa.recall_timeout_minutes || 0)
-      setTempoUltimoRecall(empresa.final_recall_timeout_minutes || 0)
-      setQuantRecalls(empresa.recall_quant || 0)
-      setAtivarRecall(empresa.recall_ativo || false)
-      setAtivarRecallConfirmacao(empresa.recall_confirmacao_ativo || false)
-      setMensagemErroIa(empresa.mensagem_erro_ia || '')
+      setTipoMessageClient(empresa.message_client_type || '');
+      setTempoRecall(empresa.recall_timeout_minutes || 0);
+      setTempoUltimoRecall(empresa.final_recall_timeout_minutes || 0);
+      setQuantRecalls(empresa.recall_quant || 0);
+      setAtivarRecall(empresa.recall_ativo || false);
+      setAtivarRecallConfirmacao(empresa.recall_confirmacao_ativo || false);
+      setMensagemErroIa(empresa.mensagem_erro_ia || '');
     }
-  }, [empresa])
+  }, [empresa]);
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     var resposta = await apiFetch.editarInformacoesMensagens(
       empresa.slug,
@@ -43,17 +43,17 @@ function FormMensagens() {
       ativarRecall,
       ativarRecallConfirmacao,
       mensagemErroIa,
-    )
+    );
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
-      setEmpresa(resposta)
-      alert('Dados atualizados com sucesso')
+      resposta = await resposta.json();
+      setEmpresa(resposta);
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   return (
     <Form>
@@ -149,7 +149,7 @@ function FormMensagens() {
         )}
       </Button>
     </Form>
-  )
+  );
 }
 
-export default FormMensagens
+export default FormMensagens;

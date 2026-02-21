@@ -1,7 +1,7 @@
-import React from 'react'
-import { Container, Card } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faShieldAlt } from '@fortawesome/free-solid-svg-icons'
+import React from 'react';
+import { Container, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 
 const PoliticaPrivacidade = () => {
   return (
@@ -83,7 +83,7 @@ const PoliticaPrivacidade = () => {
         </Card.Body>
       </Card>
     </Container>
-  )
-}
+  );
+};
 
-export default PoliticaPrivacidade
+export default PoliticaPrivacidade;

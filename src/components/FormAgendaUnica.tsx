@@ -1,36 +1,36 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function FormAgendaUnica({ agenda, selecionar }) {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [endereco, setEndereco] = useState('')
-  const [atalho, setAtalho] = useState('')
-  const [enviado, setEnviado] = useState(false)
-  const [excluido, setExcluido] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [endereco, setEndereco] = useState('');
+  const [atalho, setAtalho] = useState('');
+  const [enviado, setEnviado] = useState(false);
+  const [excluido, setExcluido] = useState(false);
 
   useEffect(() => {
     if (agenda) {
-      setEndereco(agenda.endereco || '')
-      setAtalho(agenda.atalho || '')
+      setEndereco(agenda.endereco || '');
+      setAtalho(agenda.atalho || '');
     }
-  }, [agenda])
+  }, [agenda]);
 
   const addAgenda = (novaAgenda) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         agenda: [...prevEmpresa.agenda, novaAgenda],
-      }
-    })
+      };
+    });
 
-    selecionar(novaAgenda)
-  }
+    selecionar(novaAgenda);
+  };
 
   const updAgenda = (id, agendaAtualizada) => {
     setEmpresa((prevEmpresa) => {
@@ -39,61 +39,61 @@ function FormAgendaUnica({ agenda, selecionar }) {
         agenda: prevEmpresa.agenda.map((agenda) =>
           agenda.id === id ? { ...agenda, ...agendaAtualizada } : agenda,
         ),
-      }
-    })
-  }
+      };
+    });
+  };
 
   const delAgenda = (id) => {
     setEmpresa((prevEmpresa) => {
       return {
         ...prevEmpresa,
         agenda: prevEmpresa.agenda.filter((agenda) => agenda.id !== id),
-      }
-    })
+      };
+    });
 
-    selecionar('+')
-  }
+    selecionar('+');
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
     if (agenda === '+') {
-      var resposta = await apiFetch.adicionarAgenda(empresa.slug, endereco, atalho)
+      var resposta = await apiFetch.adicionarAgenda(empresa.slug, endereco, atalho);
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        addAgenda(resposta)
-        alert('Agenda adicionada com sucesso')
+        resposta = await resposta.json();
+        addAgenda(resposta);
+        alert('Agenda adicionada com sucesso');
       }
     } else {
-      var resposta = await apiFetch.editarAgenda(empresa.slug, agenda.id, endereco, atalho)
+      var resposta = await apiFetch.editarAgenda(empresa.slug, agenda.id, endereco, atalho);
       if (resposta && resposta.status === 200) {
-        resposta = await resposta.json()
-        updAgenda(agenda.id, resposta)
-        alert('Dados atualizados com sucesso')
+        resposta = await resposta.json();
+        updAgenda(agenda.id, resposta);
+        alert('Dados atualizados com sucesso');
       } else {
-        alert('Ocorreu um erro ao atualizar os dados')
+        alert('Ocorreu um erro ao atualizar os dados');
       }
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const excluir = async () => {
-    setExcluido(true)
+    setExcluido(true);
 
-    var resposta = await apiFetch.removerAgenda(empresa.slug, agenda.id)
+    var resposta = await apiFetch.removerAgenda(empresa.slug, agenda.id);
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       if (resposta === true) {
-        delAgenda(agenda.id)
-        alert('Agenda excluída com sucesso')
+        delAgenda(agenda.id);
+        alert('Agenda excluída com sucesso');
       } else {
-        alert('Não foi possível excluir a agenda. Tente novamente')
+        alert('Não foi possível excluir a agenda. Tente novamente');
       }
     }
 
-    setExcluido(false)
-  }
+    setExcluido(false);
+  };
 
   return (
     <Form>
@@ -147,7 +147,7 @@ function FormAgendaUnica({ agenda, selecionar }) {
         )}
       </div>
     </Form>
-  )
+  );
 }
 
-export default FormAgendaUnica
+export default FormAgendaUnica;

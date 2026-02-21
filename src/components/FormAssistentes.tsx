@@ -1,61 +1,61 @@
-import { Button, Form } from 'react-bootstrap'
-import Accordion from 'react-bootstrap/Accordion'
-import { useState, useContext, useEffect } from 'react'
-import FormAssistenteUnico from './FormAssistenteUnico'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
-import FormVoz from './FormVoz'
+import { Button, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import { useState, useContext, useEffect } from 'react';
+import FormAssistenteUnico from './FormAssistenteUnico';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
+import FormVoz from './FormVoz';
 
 function FormAssistentes() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [assistentes, setAssistentes] = useState('')
-  const [vozes, setVozes] = useState('')
-  const [assSelecionado, setAssSelecionado] = useState(null)
-  const [vozSelecionada, setVozSelecionada] = useState(null)
-  const [assPadraoSelecionado, setAssPadraoSelecionado] = useState(null)
-  const [enviado, setEnviado] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [assistentes, setAssistentes] = useState('');
+  const [vozes, setVozes] = useState('');
+  const [assSelecionado, setAssSelecionado] = useState(null);
+  const [vozSelecionada, setVozSelecionada] = useState(null);
+  const [assPadraoSelecionado, setAssPadraoSelecionado] = useState(null);
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setAssistentes(empresa.assistentes)
-      setVozes(empresa.vozes)
+      setAssistentes(empresa.assistentes);
+      setVozes(empresa.vozes);
     }
-  }, [empresa])
+  }, [empresa]);
 
   const alterarAssSelecionado = (id) => {
     if (id === '+') {
-      setAssSelecionado('+')
+      setAssSelecionado('+');
     } else {
-      var assistente = assistentes.find((ass) => ass.id === parseInt(id))
-      setAssSelecionado(assistente)
+      var assistente = assistentes.find((ass) => ass.id === parseInt(id));
+      setAssSelecionado(assistente);
     }
-  }
+  };
 
   const alterarVozSelecionada = (id) => {
     if (id === '+') {
-      setVozSelecionada('+')
+      setVozSelecionada('+');
     } else {
-      var voz = vozes.find((voz) => voz.id === parseInt(id))
-      setVozSelecionada(voz)
+      var voz = vozes.find((voz) => voz.id === parseInt(id));
+      setVozSelecionada(voz);
     }
-  }
+  };
 
   const enviar = async () => {
-    setEnviado(true)
+    setEnviado(true);
 
-    var resposta = await apiFetch.editarInformacoesAssistentes(empresa.slug, assPadraoSelecionado)
+    var resposta = await apiFetch.editarInformacoesAssistentes(empresa.slug, assPadraoSelecionado);
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
-      setEmpresa(resposta)
-      alert('Dados atualizados com sucesso')
+      resposta = await resposta.json();
+      setEmpresa(resposta);
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   return (
     <Form>
@@ -92,10 +92,10 @@ function FormAssistentes() {
             Object.entries(
               assistentes.reduce((acc, assistente) => {
                 if (!acc[assistente.proposito]) {
-                  acc[assistente.proposito] = []
+                  acc[assistente.proposito] = [];
                 }
-                acc[assistente.proposito].push(assistente)
-                return acc
+                acc[assistente.proposito].push(assistente);
+                return acc;
               }, {}),
             ).map(([proposito, lista]) => (
               <optgroup key={proposito} label={proposito.toUpperCase()}>
@@ -159,7 +159,7 @@ function FormAssistentes() {
         )}
       </Button>
     </Form>
-  )
+  );
 }
 
-export default FormAssistentes
+export default FormAssistentes;

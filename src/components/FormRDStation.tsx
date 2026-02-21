@@ -1,69 +1,69 @@
-import { useContext, useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import Accordion from 'react-bootstrap/Accordion'
-import FormEstagioRD from './FormEstagioRD'
-import ApiFetch from '../utils/ApiFetch'
-import Spinner from 'react-bootstrap/Spinner'
-import { EmpresaContext } from '../contexts/EmpresaContext'
+import { useContext, useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import FormEstagioRD from './FormEstagioRD';
+import ApiFetch from '../utils/ApiFetch';
+import Spinner from 'react-bootstrap/Spinner';
+import { EmpresaContext } from '../contexts/EmpresaContext';
 
 function FormRDStation() {
-  const apiFetch = new ApiFetch()
-  const { empresa, setEmpresa } = useContext(EmpresaContext)
-  const [rdStationClient, setRdStationClient] = useState()
-  const [token, setToken] = useState('')
-  const [idFontePadrao, setIdFontePadrao] = useState('')
-  const [estagios, setEstagios] = useState('')
-  const [estagioSelecionado, setEstagioSelecionado] = useState(null)
-  const [enviado, setEnviado] = useState(false)
+  const apiFetch = new ApiFetch();
+  const { empresa, setEmpresa } = useContext(EmpresaContext);
+  const [rdStationClient, setRdStationClient] = useState();
+  const [token, setToken] = useState('');
+  const [idFontePadrao, setIdFontePadrao] = useState('');
+  const [estagios, setEstagios] = useState('');
+  const [estagioSelecionado, setEstagioSelecionado] = useState(null);
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     if (empresa) {
-      setRdStationClient(empresa.rdstationcrm_client[0])
+      setRdStationClient(empresa.rdstationcrm_client[0]);
     }
-  }, [empresa])
+  }, [empresa]);
 
   useEffect(() => {
     if (rdStationClient) {
-      setToken(rdStationClient.token)
-      setIdFontePadrao(rdStationClient.id_fonte_padrao)
-      setEstagios(rdStationClient.estagios)
+      setToken(rdStationClient.token);
+      setIdFontePadrao(rdStationClient.id_fonte_padrao);
+      setEstagios(rdStationClient.estagios);
     }
-  }, [rdStationClient])
+  }, [rdStationClient]);
 
   const enviar = async () => {
-    setEnviado(true)
-    var resposta = null
+    setEnviado(true);
+    var resposta = null;
 
     if (rdStationClient) {
-      resposta = await apiFetch.editarInformacoesRDStation(empresa.slug, token, idFontePadrao)
+      resposta = await apiFetch.editarInformacoesRDStation(empresa.slug, token, idFontePadrao);
     } else {
-      resposta = await apiFetch.adicionarClienteRDStation(empresa.slug, token, idFontePadrao)
+      resposta = await apiFetch.adicionarClienteRDStation(empresa.slug, token, idFontePadrao);
     }
 
     if (resposta && resposta.status === 200) {
-      resposta = await resposta.json()
+      resposta = await resposta.json();
       setEmpresa((prevEmpresa) => {
         return {
           ...prevEmpresa,
           rdstationcrm_client: [resposta],
-        }
-      })
-      alert('Dados atualizados com sucesso')
+        };
+      });
+      alert('Dados atualizados com sucesso');
     } else {
-      alert('Ocorreu um erro')
+      alert('Ocorreu um erro');
     }
 
-    setEnviado(false)
-  }
+    setEnviado(false);
+  };
 
   const alterarEstagioSelecionado = (id) => {
     if (id === '+') {
-      setEstagioSelecionado('+')
+      setEstagioSelecionado('+');
     } else {
-      var estagio = rdStationClient.estagios.find((est) => est.id === parseInt(id))
-      setEstagioSelecionado(estagio)
+      var estagio = rdStationClient.estagios.find((est) => est.id === parseInt(id));
+      setEstagioSelecionado(estagio);
     }
-  }
+  };
 
   return (
     <Form>
@@ -120,7 +120,7 @@ function FormRDStation() {
         )}
       </Button>
     </Form>
-  )
+  );
 }
 
-export default FormRDStation
+export default FormRDStation;

@@ -1,37 +1,37 @@
-import Form from 'react-bootstrap/Form'
-import FloatingLabel from 'react-bootstrap/FloatingLabel'
-import { useState } from 'react'
-import { Button, Container, InputGroup } from 'react-bootstrap'
-import ApiFetch from '../utils/ApiFetch'
-import { useNavigate } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { useState } from 'react';
+import { Button, Container, InputGroup } from 'react-bootstrap';
+import ApiFetch from '../utils/ApiFetch';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 function Login() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [exibirSenha, setExibirSenha] = useState(false)
-  const [aguardando, setAguardando] = useState(false)
-  const navigate = useNavigate()
-  const apiFetch = new ApiFetch()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [exibirSenha, setExibirSenha] = useState(false);
+  const [aguardando, setAguardando] = useState(false);
+  const navigate = useNavigate();
+  const apiFetch = new ApiFetch();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setAguardando(true)
+    e.preventDefault();
+    setAguardando(true);
 
-    var token = await apiFetch.login(username, password)
+    const token = await apiFetch.login(username, password);
 
     if (token !== null) {
       if (token.status === true) {
-        navigate('/empresas')
+        navigate('/empresas');
       } else {
-        alert('Erro ao fazer login')
-        setAguardando(false)
+        alert('Erro ao fazer login');
+        setAguardando(false);
       }
     }
 
-    setAguardando(false)
-  }
+    setAguardando(false);
+  };
 
   return (
     <Container className="pt-4">
@@ -66,7 +66,7 @@ function Login() {
         </Button>
       </Form>
     </Container>
-  )
+  );
 }
 
-export default Login
+export default Login;
